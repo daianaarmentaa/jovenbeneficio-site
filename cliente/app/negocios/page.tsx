@@ -1,5 +1,8 @@
+import NegociosTable from "@/componentes/NegociosTable";
 export default function NegociosPage() {
     return (
-        <h1>Negocios</h1>
+        <div>
+            <NegociosTable/>
+        </div>
     );
 }

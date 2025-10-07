@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { User } from "lucide-react";
+import Link from "next/link";
 
 export default function RegistroJoven() {
   const [formData, setFormData] = useState({
@@ -217,12 +218,13 @@ export default function RegistroJoven() {
           </div>
         </div>
 
-        {/* Botones */}
         <div className="flex justify-end gap-4 border-t border-gray-200 pt-6">
-          <button type="button" className="btn btn-ghost">
-            Cancelar
-          </button>
-          <button type="submit" className="btn btn-primary">
+            <Link href="/jovenes">
+                <button type="button" className="btn btn-ghost rounded">
+                    Cancelar
+                </button>
+            </Link>
+          <button type="submit" className="btn btn-primary rounded">
             Registrar
           </button>
         </div>

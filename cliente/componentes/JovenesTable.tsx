@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link"; 
 
 type Joven = {
   id: number;
@@ -62,7 +63,9 @@ export default function JovenesTable() {
                 setCurrentPage(1);
                 }}
             />
-            <button className="btn btn-primary btn-lg text-sm rounded">Registrar Joven</button>
+              <Link href="/jovenes/registrarJoven">
+                <button className="btn btn-primary btn-lg text-sm rounded">Registrar Joven</button>
+              </Link>
             </div>
 
       <table className="table w-full border border-gray-200">
