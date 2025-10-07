@@ -22,7 +22,6 @@ export default function NegociosTable() {
   const pageSize = 5;
 
   useEffect(() => {
-    // Ejemplo usando JSON placeholder, reemplazar con la API
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((res) => res.json())
       .then((data) => {
@@ -55,9 +54,13 @@ export default function NegociosTable() {
     currentPage * pageSize
   );
 
+  const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
+  const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
+
   return (
-    <div className="overflow-x-auto p-2">
-      <div className="mb-4 flex gap-2 w-full max-w-8xl">
+    <div className="p-2">
+      {/* --- Barra de Búsqueda y Botón --- */}
+      <div className="mb-4 flex gap-2 w-full">
         <input
           type="search"
           placeholder="Buscar por nombre..."
@@ -68,50 +71,85 @@ export default function NegociosTable() {
             setCurrentPage(1);
           }}
         />
-        <Link href="/negocios/registrarNegocio">
+        <Link href="/home/negocios/registrarNegocio">
           <button className="btn btn-primary btn-lg text-sm rounded">
             Registrar Negocio
           </button>
         </Link>
       </div>
 
-      <table className="table w-full border border-gray-200">
-        <thead className="bg-base-100">
-          <tr>
-            <th>Logo</th>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>RFC</th>
-            <th>Ciudad</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginated.map((negocio) => (
-            <tr key={negocio.id} className="bg-base-100 hover:bg-base-300">
-              <td>
-                <img
-                  src={`https://i.pravatar.cc/50?img=${negocio.id}`}
-                  alt={negocio.nombre}
-                  className="w-10 h-10 rounded-full"
-                />
-              </td>
-              <td>{negocio.id}</td>
-              <td>{negocio.nombre}</td>
-              <td>{negocio.rfc}</td>
-              <td>{negocio.direccion.ciudad}</td>
-              <td>{negocio.correo}</td>
-              <td>{negocio.telefono}</td>
+      <div className="overflow-x-auto hidden md:block">
+        <table className="table w-full border border-base-300">
+          <thead className="bg-base-200">
+            <tr>
+              <th>Logo</th>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>RFC</th>
+              <th>Ciudad</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paginated.map((negocio) => (
+              <tr key={negocio.id} className="bg-base-100 hover:bg-base-300">
+                <td>
+                  <div className="avatar">
+                    <div className="w-10 rounded-full">
+                      <img src={`https://i.pravatar.cc/50?u=${negocio.id}`} alt={negocio.nombre} />
+                    </div>
+                  </div>
+                </td>
+                <td>{negocio.id}</td>
+                <td>{negocio.nombre}</td>
+                <td>{negocio.rfc}</td>
+                <td>{negocio.direccion.ciudad}</td>
+                <td>{negocio.correo}</td>
+                <td>{negocio.telefono}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="md:hidden flex flex-col gap-4">
+        {paginated.map((negocio) => (
+          <div key={negocio.id} className="card bg-base-100 shadow-lg p-4">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="avatar">
+                <div className="w-12 rounded-full">
+                  <img src={`https://i.pravatar.cc/50?u=${negocio.id}`} alt={negocio.nombre} />
+                </div>
+              </div>
+              <div className="font-bold text-lg">{negocio.nombre}</div>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between border-b border-base-200 py-1">
+                <span className="font-semibold text-base-content/70">RFC:</span>
+                <span>{negocio.rfc}</span>
+              </div>
+              <div className="flex justify-between border-b border-base-200 py-1">
+                <span className="font-semibold text-base-content/70">Ciudad:</span>
+                <span>{negocio.direccion.ciudad}</span>
+              </div>
+              <div className="flex justify-between border-b border-base-200 py-1">
+                <span className="font-semibold text-base-content/70">Correo:</span>
+                <span className="truncate">{negocio.correo}</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="font-semibold text-base-content/70">Teléfono:</span>
+                <span>{negocio.telefono}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className="flex justify-between items-center mt-4">
         <button
           className="btn btn-sm btn-primary rounded"
-          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          onClick={handlePrev}
           disabled={currentPage === 1}
         >
           Anterior
@@ -121,7 +159,7 @@ export default function NegociosTable() {
         </span>
         <button
           className="btn btn-sm btn-primary rounded"
-          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+          onClick={handleNext}
           disabled={currentPage === totalPages}
         >
           Siguiente

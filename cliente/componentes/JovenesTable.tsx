@@ -35,12 +35,10 @@ export default function JovenesTable() {
 
   if (loading) return <p>Cargando jóvenes...</p>;
 
-  // Filtrado
   const filtered = jovenes.filter((j) =>
     j.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Paginación
   const totalPages = Math.ceil(filtered.length / pageSize);
   const paginated = filtered.slice(
     (currentPage - 1) * pageSize,
@@ -51,54 +49,82 @@ export default function JovenesTable() {
   const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
 
   return (
-    <div className="overflow-x-auto p-2">
-        <div className="mb-4 flex gap-2 w-full max-w-8xl">
-            <input
-                type="search"
-                placeholder="Buscar por nombre..."
-                className="input input-bordered input-lg flex-1 !rounded-sm placeholder:text-sm"
-                value={search}
-                onChange={(e) => {
-                setSearch(e.target.value);
-                setCurrentPage(1);
-                }}
-            />
-              <Link href="/jovenes/registrarJoven">
-                <button className="btn btn-primary btn-lg text-sm rounded">Registrar Joven</button>
-              </Link>
-            </div>
-
-      <table className="table w-full border border-gray-200">
-        <thead className="bg-base-100">
-          <tr>
-            <th>Foto</th>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Ciudad</th>
-            <th>Teléfono</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginated.map((joven) => (
-            <tr key={joven.id} className="bg-base-100 hover:bg-base-300">
-              <td>
-                <img
-                  src={`https://i.pravatar.cc/50?img=${joven.id}`}
-                  alt={joven.name}
-                  className="w-10 h-10 rounded-full"
-                />
-              </td>
-              <td>{joven.id}</td>
-              <td>{joven.name}</td>
-              <td>{joven.email}</td>
-              <td>{joven.address.city}</td>
-              <td>{joven.phone}</td>
+    <div className="p-2">
+      <div className="mb-4 flex gap-2 w-full">
+        <input
+          type="search"
+          placeholder="Buscar por nombre..."
+          className="input input-bordered input-lg flex-1 !rounded-sm placeholder:text-sm"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
+        <Link href="/home/jovenes/registrarJoven">
+          <button className="btn btn-primary btn-lg text-sm rounded">Registrar Joven</button>
+        </Link>
+      </div>
+      <div className="overflow-x-auto hidden md:block">
+        <table className="table w-full border border-base-300">
+          <thead className="bg-base-200">
+            <tr>
+              <th>Foto</th>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Ciudad</th>
+              <th>Teléfono</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {paginated.map((joven) => (
+              <tr key={joven.id} className="bg-base-100 hover:bg-base-300">
+                <td>
+                  <img
+                    src={`https://i.pravatar.cc/50?img=${joven.id}`}
+                    alt={joven.name}
+                    className="w-10 h-10 rounded-full"
+                  />
+                </td>
+                <td>{joven.id}</td>
+                <td>{joven.name}</td>
+                <td>{joven.email}</td>
+                <td>{joven.address.city}</td>
+                <td>{joven.phone}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="md:hidden flex flex-col gap-4">
+        {paginated.map((joven) => (
+          <div key={joven.id} className="card bg-base-100 shadow-lg p-4">
+            <div className="flex items-center gap-4 mb-4">
+              <img
+                src={`https://i.pravatar.cc/50?img=${joven.id}`}
+                alt={joven.name}
+                className="w-12 h-12 rounded-full"
+              />
+              <div className="font-bold text-lg">{joven.name}</div>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="font-semibold text-base-content/70">Correo:</span>
+                <span>{joven.email}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold text-base-content/70">Ciudad:</span>
+                <span>{joven.address.city}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-semibold text-base-content/70">Teléfono:</span>
+                <span>{joven.phone}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
       <div className="flex justify-between items-center mt-4">
         <button
           className="btn btn-sm btn-primary rounded"
