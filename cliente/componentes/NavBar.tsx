@@ -1,7 +1,8 @@
 "use client"; // 1. Necesario para usar hooks como usePathname
 
 import { Bell, Menu } from "lucide-react";
-import { usePathname } from "next/navigation"; // 2. Importa el hook
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 type NavBarProps = {
   toggleSidebar: () => void;
@@ -10,19 +11,16 @@ type NavBarProps = {
 export default function NavBar({ toggleSidebar }: NavBarProps) {
   const pathname = usePathname();
 
-  // 3. Mapeo de rutas a los títulos que quieres mostrar
   const titleMap: { [key: string]: string } = {
     "/home": "Dashboard",
     "/home/jovenes": "Jóvenes",
     "/home/negocios": "Negocios",
     "/home/promociones": "Promociones",
     "/home/ajustes": "Ajustes",
-    // --- Agrega aquí nuevas rutas y títulos en el futuro ---
     "/home/jovenes/registrarJoven": "Jóvenes",
     "/home/negocios/registrarNegocio": "Negocios",
   };
 
-  // 4. Determina el título actual, si no lo encuentra, usa "Dashboard"
   const title = titleMap[pathname] || "Dashboard";
 
   return (
@@ -32,12 +30,11 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
           <Menu className="w-5 h-5" />
         </button>
         
-        {/* 5. Muestra el título dinámico */}
         <span className="text-xl font-bold ml-2">{title}</span>
       </div>
 
       <div className="flex-none">
-        {/* Notificaciones */}
+
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
             <div className="indicator">
@@ -47,7 +44,6 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
           </div>
         </div>
         
-        {/* Avatar del Usuario */}
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
@@ -60,12 +56,16 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
             <li>
-              <a className="justify-between">
+              <Link href="/home/ajustes">
                 Perfil
-              </a>
+              </Link>
             </li>
-            <li><a>Ajustes</a></li>
-            <li><a>Cerrar Sesión</a></li>
+            <li>
+              {/*TODO: poner un boton para manejar el cierre de sesión*/}
+              <button className="text-black">
+                Cerrar Sesión
+              </button>
+            </li>
           </ul>
         </div>
       </div>
