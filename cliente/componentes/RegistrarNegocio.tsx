@@ -5,7 +5,6 @@ import { Building } from "lucide-react"; // Usamos un ícono más apropiado
 import Link from "next/link";
 
 export default function RegistrarNegocio() {
-  // 1. Estado corregido con campos para un negocio
   const [formData, setFormData] = useState({
     nombreNegocio: "",
     nombreEncargado: "",
@@ -23,7 +22,6 @@ export default function RegistrarNegocio() {
     password: "",
   });
 
-  // 2. Lógica de validación (igual que en el otro form)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
     if (files && files.length > 0) {
@@ -54,7 +52,6 @@ export default function RegistrarNegocio() {
     alert("Negocio registrado con éxito");
   };
 
-  // 3. Se eliminó el div exterior que centraba el contenido
   return (
     <form
       onSubmit={handleSubmit}

@@ -139,12 +139,11 @@ export default function RegistroJoven() {
           </div>
           <div>
             <label className="label"><span className="label-text">Género</span></label>
-            <select name="genero" onChange={handleChange} required className="select select-bordered w-full !rounded">
-              <option disabled selected value="">Selecciona una opción</option>
+            <select name="genero" onChange={handleChange} value= {formData.genero} required className="select select-bordered w-full !rounded">
+              <option disabled value="">Selecciona una opción</option>
               <option>Masculino</option>
               <option>Femenino</option>
               <option>Otro</option>
-              <option>Prefiero no decirlo</option>
             </select>
           </div>
         </div>
