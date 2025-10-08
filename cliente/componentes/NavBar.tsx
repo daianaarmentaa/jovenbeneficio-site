@@ -30,7 +30,7 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
           <Menu className="w-5 h-5" />
         </button>
         
-        <span className="text-xl font-bold ml-2">{title}</span>
+        <span className="text-xl font-semibold ml-2">{title}</span>
       </div>
 
       <div className="flex-none">
@@ -39,7 +39,7 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
             <div className="indicator">
               <Bell className="w-5 h-5"></Bell>
-              <span className="badge badge-xs badge-info indicator-item"></span>
+              <span className="badge badge-xs badge-primary indicator-item"></span>
             </div>
           </div>
         </div>

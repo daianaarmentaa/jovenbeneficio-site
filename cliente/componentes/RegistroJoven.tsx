@@ -18,7 +18,6 @@ export default function RegistroJoven() {
       colonia: "",
       codigoPostal: "",
       municipio: "",
-      estado: "",
     },
     curp: "",
     correo: "",
@@ -178,10 +177,6 @@ export default function RegistroJoven() {
           <div>
             <label className="label"><span className="label-text">Municipio / Alcaldía</span></label>
             <input type="text" name="direccion.municipio" onChange={handleChange} required className="input input-bordered w-full !rounded" />
-          </div>
-          <div>
-            <label className="label"><span className="label-text">Estado</span></label>
-            <input type="text" name="direccion.estado" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
         </div>
       </div>

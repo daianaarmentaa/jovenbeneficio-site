@@ -33,6 +33,9 @@
   --border: 2px;
   --depth: 0;
   --noise: 0;
+  --stats-border-color: oklch(92.462% 0.001 247.838); /* Usando el color Primary del tema */
+  --stats-border-style: dotted; /* Asegura que el estilo sea punteado */
+  --stats-border-width: px;    /* Opcional: ajusta el grosor */
 
 }
 
