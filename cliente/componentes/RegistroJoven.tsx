@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { User } from "lucide-react";
@@ -7,9 +7,19 @@ import Link from "next/link";
 export default function RegistroJoven() {
   const [formData, setFormData] = useState({
     nombre: "",
-    apellidos: "",
+    apellidoPaterno: "",
+    apellidoMaterno: "",
     fechaNacimiento: "",
-    direccion: "",
+    genero: "",
+    direccion: {
+      calle: "",
+      numeroExterior: "",
+      numeroInterior: "",
+      colonia: "",
+      codigoPostal: "",
+      municipio: "",
+      estado: "",
+    },
     curp: "",
     correo: "",
     celular: "",
@@ -22,15 +32,33 @@ export default function RegistroJoven() {
     correo: "",
     celular: "",
     password:"",
+    curp: "",
   });
 
-  // --- Lógica de validación y manejo de cambios (sin cambios) ---
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
-    if (files && files.length > 0) {
-      const file = files[0];
-      setFormData({ ...formData, [name]: file });
-      setPreview(URL.createObjectURL(file));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    let finalValue = value;
+
+    if (name === 'curp') {
+      finalValue = value.toUpperCase();
+    }
+
+    if (type === 'file') {
+      const files = (e.target as HTMLInputElement).files;
+      if (files && files.length > 0) {
+        const file = files[0];
+        setFormData({ ...formData, [name]: file });
+        setPreview(URL.createObjectURL(file));
+      }
+    } else if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setFormData(prev => ({
+        ...prev,
+        [parent]: {
+          ...(prev[parent as keyof typeof prev] as object),
+          [child]: value
+        }
+      }));
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -47,6 +75,15 @@ export default function RegistroJoven() {
       const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
       setErrors((prev) => ({ ...prev, password: passRegex.test(value) ? "" : "Mínimo 8 caracteres, una letra y un número" }));
     }
+    if (name === "curp") {
+      setErrors((prev) => ({
+        ...prev,
+        curp: finalValue.length !== 18 && finalValue.length > 0
+          ? "El CURP debe tener 18 caracteres."
+          : "",
+      }));
+    }
+
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,7 +97,6 @@ export default function RegistroJoven() {
       onSubmit={handleSubmit}
       className="w-full bg-base-100 shadow-lg rounded-xl p-6 sm:p-10 space-y-8"
     >
-
       <div className="border-b border-base-300 pb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-base-content">
           Registro de Jóvenes
@@ -70,68 +106,116 @@ export default function RegistroJoven() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div>
-          <label className="label">
-            <span className="label-text">Nombre</span>
-          </label>
-          <input type="text" name="nombre" onChange={handleChange} required className="input input-bordered w-full !rounded" />
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Apellidos</span>
-          </label>
-          <input type="text" name="apellidos" onChange={handleChange} required className="input input-bordered w-full !rounded" />
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Fecha de nacimiento</span>
-          </label>
-          <input type="date" name="fechaNacimiento" onChange={handleChange} required className="input input-bordered w-full !rounded" />
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">CURP</span>
-          </label>
-          <input type="text" name="curp" onChange={handleChange} placeholder="18 caracteres" required className="input input-bordered w-full uppercase !rounded" />
-        </div>
-        <div className="sm:col-span-2">
-          <label className="label">
-            <span className="label-text">Dirección</span>
-          </label>
-          <input type="text" name="direccion" onChange={handleChange} required className="input input-bordered w-full !rounded" />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div>
-          <label className="label">
-            <span className="label-text">Correo</span>
-          </label>
-          <input type="email" name="correo" onChange={handleChange} placeholder="correo@ejemplo.com" required className={`input input-bordered w-full !rounded ${errors.correo ? "input-error" : "" }`} />
-          {errors.correo && <span className="text-error text-xs mt-1">{errors.correo}</span>}
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Celular</span>
-          </label>
-          <input type="tel" name="celular" onChange={handleChange} placeholder="10 dígitos" required className={`input input-bordered w-full !rounded ${errors.celular ? "input-error" : "" }`} />
-          {errors.celular && <span className="text-error text-xs mt-1">{errors.celular}</span>}
-        </div>
-      </div>
-
-      <div>
-        <label className="label">
-          <span className="label-text">Contraseña</span>
-        </label>
-        <input type="password" name="password" onChange={handleChange} required className={`input input-bordered w-full !rounded ${errors.password ? "input-error" : "" }`} />
-        {errors.password && <span className="text-error text-xs mt-1">{errors.password}</span>}
-      </div>
-
+      {/* --- SECCIÓN 1: DATOS PERSONALES --- */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-base-content">
-          Foto de perfil
-        </h2>
+        <h2 className="text-xl font-semibold text-base-content">Datos Personales</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label className="label"><span className="label-text">Nombre(s)</span></label>
+            <input type="text" name="nombre" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Apellido Paterno</span></label>
+            <input type="text" name="apellidoPaterno" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Apellido Materno</span></label>
+            <input type="text" name="apellidoMaterno" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Fecha de nacimiento</span></label>
+            <input type="date" name="fechaNacimiento" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">CURP</span></label>
+            <input type="text" 
+                   name="curp" 
+                   onChange={handleChange} 
+                   value={formData.curp} 
+                   placeholder="18 caracteres" 
+                   maxLength={18} required 
+                   className={`input input-bordered w-full uppercase !rounded ${errors.curp ? 'input-error' : ''}`} />
+                   {errors.curp && <span className="text-error text-xs mt-1">{errors.curp}</span>}
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Género</span></label>
+            <select name="genero" onChange={handleChange} required className="select select-bordered w-full !rounded">
+              <option disabled selected value="">Selecciona una opción</option>
+              <option>Masculino</option>
+              <option>Femenino</option>
+              <option>Otro</option>
+              <option>Prefiero no decirlo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div className="divider"></div>
+
+      {/* --- SECCIÓN 2: DIRECCIÓN --- */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-base-content">Dirección</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="sm:col-span-2 lg:col-span-3">
+            <label className="label"><span className="label-text">Calle</span></label>
+            <input type="text" name="direccion.calle" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Número Exterior</span></label>
+            <input type="text" name="direccion.numeroExterior" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Número Interior (Opcional)</span></label>
+            <input type="text" name="direccion.numeroInterior" onChange={handleChange} className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Código Postal</span></label>
+            <input type="text" name="direccion.codigoPostal" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div className="sm:col-span-2 lg:col-span-3">
+            <label className="label"><span className="label-text">Colonia</span></label>
+            <input type="text" name="direccion.colonia" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Municipio / Alcaldía</span></label>
+            <input type="text" name="direccion.municipio" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Estado</span></label>
+            <input type="text" name="direccion.estado" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+        </div>
+      </div>
+
+      <div className="divider"></div>
+
+      {/* --- SECCIÓN 3: DATOS DE LA CUENTA --- */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-base-content">Datos de la Cuenta</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label className="label"><span className="label-text">Correo</span></label>
+            <input type="email" name="correo" onChange={handleChange} placeholder="correo@ejemplo.com" required className={`input input-bordered w-full !rounded ${errors.correo ? "input-error" : "" }`} />
+            {errors.correo && <span className="text-error text-xs mt-1">{errors.correo}</span>}
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Celular</span></label>
+            <input type="tel" name="celular" onChange={handleChange} placeholder="10 dígitos" required className={`input input-bordered w-full !rounded ${errors.celular ? "input-error" : "" }`} />
+            {errors.celular && <span className="text-error text-xs mt-1">{errors.celular}</span>}
+          </div>
+        </div>
+        <div>
+          <label className="label"><span className="label-text">Contraseña</span></label>
+          <input type="password" name="password" onChange={handleChange} required className={`input input-bordered w-full !rounded ${errors.password ? "input-error" : "" }`} />
+          {errors.password && <span className="text-error text-xs mt-1">{errors.password}</span>}
+        </div>
+      </div>
+
+      <div className="divider"></div>
+
+      {/* --- SECCIÓN 4: FOTO DE PERFIL --- */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-base-content">Foto de Perfil</h2>
         <div className="flex flex-col sm:flex-row items-center gap-6">
           {preview ? (
             <img src={preview} alt="Vista previa" className="w-24 h-24 rounded-full object-cover border-2 border-base-300" />
@@ -144,6 +228,7 @@ export default function RegistroJoven() {
         </div>
       </div>
 
+      {/* --- SECCIÓN 5: BOTONES DE ACCIÓN --- */}
       <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-base-300 pt-6">
         <Link href="/home/jovenes">
           <button type="button" className="btn btn-ghost rounded w-full sm:w-auto">
