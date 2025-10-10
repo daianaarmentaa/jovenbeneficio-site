@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Sidebar from "@/componentes/Sidebar";
 import NavBar from "@/componentes/NavBar";
 
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   // El estado para la visibilidad del sidebar vive aquí
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
