@@ -61,10 +61,9 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
               </Link>
             </li>
             <li>
-              {/*TODO: poner un boton para manejar el cierre de sesión*/}
-              <button className="text-black">
+              <a href="/auth/logout" className="btn-sm btn-ghost text-black">
                 Cerrar Sesión
-              </button>
+              </a>
             </li>
           </ul>
         </div>

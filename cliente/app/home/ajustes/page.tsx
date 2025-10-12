@@ -1,13 +1,15 @@
+"use client";
 import SeccionPerfil from '@/componentes/SeccionPerfil';
 import SeccionSeguridad from '@/componentes/SeccionSeguridad';
 import SeccionPreferencias from '@/componentes/SeccionPreferencias';
 import SeccionCuenta from '@/componentes/SeccionCuenta';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
-export default function AjustesPage() {
+export default withPageAuthRequired(function AjustesPage({ user }) {
   return (
     // Contenedor principal
     <div className="flex flex-col gap-12 p-4">
-      <SeccionPerfil />
+      <SeccionPerfil user={user} />
       <div className="w-full h-px bg-base-300 my-6"></div> 
       
       <SeccionSeguridad />
@@ -19,5 +21,5 @@ export default function AjustesPage() {
       
       <SeccionCuenta />
     </div>
-  );
-}
+  )
+});

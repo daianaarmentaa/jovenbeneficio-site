@@ -1,7 +1,12 @@
+"use client";
 import SectionHeader from "./SectionHeader"; // Asumiendo que creaste el componente compartido
 
-export default function SeccionPerfil() {
-  // Aquí iría el estado y la lógica solo para el formulario de perfil
+
+export default function SeccionPerfil({ user }: { user: any}) {
+
+  if(!user) {
+    return null;
+  }
   return (
     <div className="card p-6 sm:p-8">
       <SectionHeader
@@ -23,16 +28,16 @@ export default function SeccionPerfil() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label"><span className="label-text">Nombre</span></label>
-            <input type="text" placeholder="Tu nombre" className="input input-bordered w-full !rounded" />
+            <input type="text" defaultValue={user.given_name} className="input input-bordered w-full !rounded" />
           </div>
           <div>
             <label className="label"><span className="label-text">Apellidos</span></label>
-            <input type="text" placeholder="Tus apellidos" className="input input-bordered w-full !rounded" />
+            <input type="text" placeholder="Apellidos" className="input input-bordered w-full !rounded" />
           </div>
         </div>
         <div>
           <label className="label"><span className="label-text">Correo Electrónico</span></label>
-          <input type="email" value="correo@ejemplo.com" className="input input-bordered w-full" disabled />
+          <input type="email" value={user.email} className="input input-bordered w-full" disabled />
         </div>
         <div className="flex justify-end pt-4">
           <button type="submit" className="btn btn-primary rounded">Guardar Cambios</button>

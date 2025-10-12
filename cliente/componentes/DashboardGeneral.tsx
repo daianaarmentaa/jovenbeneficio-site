@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import {
   Users, DollarSign, Activity, BarChart3, PieChart as PieIcon, MapPin, Tag, BrainCircuit, CreditCard, Heart
 } from 'lucide-react';
@@ -61,10 +62,10 @@ const barColors = [
 ]
 
 
-export default function DashboardGeneral(){
+export default function DashboardGeneral({user} : { user: any}){
   return (
     <main className="p-4 sm:p-6 lg:p-8 bg-base-200 min-h-screen">
-      <h1 className="text-3xl font-semibold text-base-content mb-6">Hola! Nombre</h1>
+      <h1 className="text-3xl font-semibold text-base-content mb-6">Hola! {user.name} </h1>
 
       {/* --- SECCIÓN DE ESTADÍSTICAS RÁPIDAS (KPIs) --- */}
       <div className="stats stats-vertical lg:stats-horizontal shadow w-full mb-6">

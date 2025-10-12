@@ -1,70 +1,53 @@
-'use client';
+"use client";
+import Link from 'next/link';
+import Image from 'next/image';
 
-import { useState } from 'react';
-import { signInWithCustomToken } from 'firebase/auth';
-import { auth } from '../lib/firebase'; // Asegúrate que la ruta sea correcta
-
-export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      // 1. Llama a tu backend de Python
-      const response = await fetch('http://127.0.0.1:5000/api/login', { // La URL de tu API
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Error al iniciar sesión');
-      }
-
-      const customToken = data.token;
-
-      // 2. Inicia sesión en Firebase con el token personalizado
-      const userCredential = await signInWithCustomToken(auth, customToken);
-      console.log('¡Login exitoso!', userCredential.user);
-      // Aquí puedes redirigir al usuario o actualizar el estado global
-
-    } catch (err: any) {
-      setError(err.message);
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function HomePage() {
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Iniciar Sesión</h2>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Contraseña"
-        required
-      />
-      <button type="submit" disabled={loading} className='bg-primary rounded'>
-        {loading ? 'Cargando...' : 'Entrar'}
-      </button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </form>
+    <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
+      {/* Fondo Opcional: Gradiente o Imagen */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-90"></div>
+      
+      {/* Tarjeta de Contenido */}
+      <div className="relative w-full max-w-md p-8 space-y-8 bg-base-100 rounded-lg shadow-2xl text-center">
+        
+        {/* 1. Logo como Protagonista */}
+        <div className="flex justify-center">
+          <Image 
+            src="/logo.png"
+            alt='Logo Beneficio Joven'
+            width={250}
+            height={200}
+            className='rounded-full'
+          />
+
+
+        </div>
+        
+        {/* 2. Jerarquía de Texto */}
+        <div>
+          <h1 className="text-3xl font-bold text-base-content">
+            Portal de Administradores
+          </h1>
+          <p className="mt-2 text-base-content/70">
+            Inicia sesión para acceder a la aplicación.
+          </p>
+        </div>
+
+        {/* 3. Llamado a la Acción Claro */}
+        <a 
+          href="/auth/login" 
+          className="btn btn-primary btn-block rounded-full"
+        >
+          Acceder al Panel
+        </a>
+      </div>
+
+      {/* 4. Detalles de Confianza en el Pie de Página */}
+      <footer className="absolute bottom-4 text-center w-full text-gray-500/60 text-sm z-10">
+        <p>&copy; {new Date().getFullYear()} Beneficio Joven. Todos los derechos reservados.</p>
+        <p className="font-semibold">Acceso Restringido</p>
+      </footer>
+    </div>
   );
 }
