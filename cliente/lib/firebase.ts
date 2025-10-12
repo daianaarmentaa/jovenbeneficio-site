@@ -20,4 +20,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined' && !auth.emulatorConfig) {
+  connectAuthEmulator(auth, "http://localhost:9099");
+}
+
 export { app, auth };
