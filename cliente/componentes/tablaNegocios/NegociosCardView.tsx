@@ -1,5 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import { Negocio } from "../app/home/negocios/page"
+import { Negocio } from "../../app/home/negocios/page"
 
 // Define las props que el componente espera recibir
 type CardViewProps = {

@@ -90,7 +90,7 @@ export default function PromocionesTable() {
         <input
           type="search"
           placeholder="Buscar por promoción o establecimiento..."
-          className="input input-bordered input-lg flex-1 !rounded-sm placeholder:text-sm"
+          className="input input-bordered input-lg flex-1 !rounded-sm w-full sm:w-full placeholder:text-sm"
           value={search}
           onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
         />

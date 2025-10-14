@@ -1,4 +1,4 @@
-import NegociosTable from "@/componentes/NegociosTable";
+import NegociosTable from "@/componentes/tablaNegocios/NegociosTable";
 
 export type Negocio = {
   id: number;

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Negocio } from "../app/home/negocios/page"
-import DeleteConfirmationModal from "./DeleteConfirmationModel";
-import Pagination from "./Pagination";
-import NegociosCardView from "./NegociosCardView";
+import { Negocio } from "../../app/home/negocios/page";
+import DeleteConfirmationModal from "../DeleteConfirmationModel";
+import Pagination from "../Pagination";
+import NegociosCardView from "../tablaNegocios/NegociosCardView";
 import NegociosDesktopTable from "./NegociosDesktopTable";
 
 export default function NegociosTable({ initialData }: { initialData: Negocio[] }) {
@@ -35,7 +35,7 @@ export default function NegociosTable({ initialData }: { initialData: Negocio[] 
         <input
           type="search"
           placeholder="Buscar por nombre o categoría..."
-          className="input input-bordered input-lg flex-1 !rounded-sm placeholder:text-sm"
+          className="input input-bordered input-m flex-1 !rounded-sm placeholder:text-sm w-full sm:w-auto"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -43,7 +43,7 @@ export default function NegociosTable({ initialData }: { initialData: Negocio[] 
           }}
         />
         <Link href="/home/negocios/registrarNegocio">
-          <button className="btn btn-primary btn-lg text-sm rounded">
+          <button className="btn btn-primary btn-m text-sm rounded w-full sm:w-auto">
             Registrar Negocio
           </button>
         </Link>

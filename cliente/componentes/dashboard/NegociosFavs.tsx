@@ -1,0 +1,31 @@
+"use client";
+import React from "react";
+import { Heart } from "lucide-react";
+import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Cell } from "recharts";
+
+type NegocioFavoritos = { name: string; favoritos: number };
+
+const barColors = ["#71D1FE", "#FFB667", "#7AF1A7", "#FF9FA0", "#E9D4FF", "#FCA4D4"];
+
+export default function NegociosFavoritos({ data }: { data: NegocioFavoritos[] }) {
+  return (
+    <div className="card bg-base-100 shadow-lg">
+      <div className="card-body">
+        <h2 className="card-title"><Heart className="text-neutral" /> Negocios Favoritos</h2>
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart data={data} layout="vertical" margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" />
+            <YAxis dataKey="name" type="category" width={110} interval={0} />
+            <Tooltip cursor={{ fill: "rgba(0,0,0,0.1)" }} />
+            <Bar dataKey="favoritos">
+              {data.map((_, i) => (
+                <Cell key={i} fill={barColors[i % barColors.length]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}

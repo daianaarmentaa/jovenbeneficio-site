@@ -1,8 +1,8 @@
 "use client";
-import SeccionPerfil from '@/componentes/SeccionPerfil';
-import SeccionSeguridad from '@/componentes/SeccionSeguridad';
-import SeccionPreferencias from '@/componentes/SeccionPreferencias';
-import SeccionCuenta from '@/componentes/SeccionCuenta';
+import SeccionPerfil from '@/componentes/ajustes/SeccionPerfil';
+import SeccionSeguridad from '@/componentes/ajustes/SeccionSeguridad';
+import SeccionPreferencias from '@/componentes/ajustes/SeccionPreferencias';
+import SeccionCuenta from '@/componentes/ajustes/SeccionCuenta';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 export default withPageAuthRequired(function AjustesPage({ user }) {

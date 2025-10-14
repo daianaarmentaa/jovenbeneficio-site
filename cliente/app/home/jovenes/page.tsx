@@ -1,4 +1,4 @@
-import JovenesTable from "@/componentes/JovenesTable";
+import JovenesTable from "@/componentes/tablaJovenes/JovenesTable";
 
 export type Joven = {
   id: number;

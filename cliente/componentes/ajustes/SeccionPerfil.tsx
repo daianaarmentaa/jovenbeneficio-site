@@ -28,11 +28,11 @@ export default function SeccionPerfil({ user }: { user: any}) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label"><span className="label-text">Nombre</span></label>
-            <input type="text" defaultValue={user.given_name} className="input input-bordered w-full !rounded" />
+            <input type="text" defaultValue={user.nickname} className="input input-bordered w-full !rounded" />
           </div>
           <div>
             <label className="label"><span className="label-text">Apellidos</span></label>
-            <input type="text" placeholder="Apellidos" className="input input-bordered w-full !rounded" />
+            <input type="text" defaultValue={user.given_name} className="input input-bordered w-full !rounded" />
           </div>
         </div>
         <div>

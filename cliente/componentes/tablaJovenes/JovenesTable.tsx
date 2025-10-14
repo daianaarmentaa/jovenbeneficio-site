@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Joven } from "../app/home/jovenes/page"; 
-import DeleteConfirmationModal from "./DeleteConfirmationModel";
-import Pagination from "./Pagination";
+import { Joven } from "../../app/home/jovenes/page"; 
+import DeleteConfirmationModal from "../DeleteConfirmationModel";
+import Pagination from "../Pagination";
 import JovenesCardView from "./JovenesCardView";
 import JovenesDesktopTable from "./JovenesDesktopTable";
 
@@ -54,7 +54,7 @@ export default function JovenesTable({ initialData }: { initialData: Joven[] }) 
         <input
           type="search"
           placeholder="Buscar por nombre o folio..."
-          className="input input-bordered input-lg flex-1 !rounded-sm placeholder:text-sm"
+          className="input input-bordered input-m flex-1 !rounded-sm  w-full placeholder:text-sm sm:w-full"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -62,7 +62,7 @@ export default function JovenesTable({ initialData }: { initialData: Joven[] }) 
           }}
         />
         <Link href="/home/jovenes/registrarJoven">
-          <button className="btn btn-primary btn-lg text-sm rounded">Registrar Joven</button>
+          <button className="btn btn-primary btn-m text-sm rounded w-full sm:w-full">Registrar Joven</button>
         </Link>
       </div>
       <JovenesDesktopTable 

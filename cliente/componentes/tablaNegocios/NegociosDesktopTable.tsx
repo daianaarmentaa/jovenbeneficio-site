@@ -1,5 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import { Negocio } from '../app/home/negocios/page'; // Importa el tipo 'Negocio'
+import { Negocio } from '../../app/home/negocios/page'; // Importa el tipo 'Negocio'
 
 type TableViewProps = {
   negocios: Negocio[];
