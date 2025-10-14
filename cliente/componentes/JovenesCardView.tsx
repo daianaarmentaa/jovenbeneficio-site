@@ -1,6 +1,9 @@
-import { Trash2 } from 'lucide-react';
-import { Joven } from "../app/home/jovenes/page"; 
+// ============================================
+// componentes/JovenesCardView.tsx
+// ============================================
 
+import { Trash2 } from 'lucide-react';
+import { Joven } from "../app/home/jovenes/page"; // ✅ Import from page
 
 type CardViewProps = {
   jovenes: Joven[];
@@ -15,10 +18,13 @@ export default function JovenesCardView({ jovenes, onDelete }: CardViewProps) {
           <div className="flex items-center gap-4 mb-4">
             <div className="avatar">
               <div className="w-12 rounded-full">
-                <img src={`https://i.pravatar.cc/50?img=${joven.id}`} alt={joven.name} />
+                <img 
+                  src={joven.foto || `https://i.pravatar.cc/50?img=${joven.id}`} 
+                  alt={joven.nombre} 
+                />
               </div>
             </div>
-            <div className="font-bold text-lg">{joven.name}</div>
+            <div className="font-bold text-lg">{joven.nombre}</div>
           </div>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -27,11 +33,11 @@ export default function JovenesCardView({ jovenes, onDelete }: CardViewProps) {
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-base-content/70">Correo:</span>
-              <span>{joven.email}</span>
+              <span>{joven.correo}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-base-content/70">Teléfono:</span>
-              <span>{joven.phone}</span>
+              <span>{joven.telefono}</span>
             </div>
           </div>
           <div className="divider my-2"></div>

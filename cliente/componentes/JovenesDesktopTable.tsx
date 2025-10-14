@@ -1,12 +1,9 @@
-import { Trash2 } from 'lucide-react';
+// ============================================
+// componentes/JovenesDesktopTable.tsx
+// ============================================
 
-type Joven = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  folio: string; 
-};
+import { Trash2 } from 'lucide-react';
+import { Joven } from "../app/home/jovenes/page"; // ✅ Import from page
 
 type TableViewProps = {
   jovenes: Joven[];
@@ -34,15 +31,18 @@ export default function JovenesDesktopTable({ jovenes, onDelete }: TableViewProp
               <td>
                 <div className="avatar">
                   <div className="w-10 rounded-full">
-                    <img src={`https://i.pravatar.cc/50?img=${joven.id}`} alt={joven.name} />
+                    <img 
+                      src={joven.foto || `https://i.pravatar.cc/50?img=${joven.id}`} 
+                      alt={joven.nombre} 
+                    />
                   </div>
                 </div>
               </td>
               <td>{joven.id}</td>
-              <td>{joven.name}</td>
-              <td>{joven.email}</td>
+              <td>{joven.nombre}</td>
+              <td>{joven.correo}</td>
               <td>{joven.folio}</td>
-              <td>{joven.phone}</td>
+              <td>{joven.telefono}</td>
               <td className="text-right">
                 <button 
                   onClick={() => onDelete(joven)} 
