@@ -1,74 +1,64 @@
-// ============================================
-// app/home/jovenes/page.tsx
-// ============================================
-
 import JovenesTable from "@/componentes/JovenesTable";
 
 export type Joven = {
   id: number;
-  foto: string;
   nombre: string;
   correo: string;
   folio: string;
   telefono: string;
+  foto: string;
 };
 
-type PaginationInfo = {
-  page: number;
-  limit: number;
-  total: number;
-  total_pages: number;
-  has_next: boolean;
-  has_prev: boolean;
+type ApiResponse = {
+  data: Joven[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+    has_next: boolean;
+    has_prev: boolean;
+  };
 };
 
-type InitialData = {
-  jovenes: Joven[];
-  pagination: PaginationInfo;
-};
-
-// Función para obtener los datos en el servidor
-async function getJovenesData(): Promise<InitialData> {
+async function getJovenesData() {
   try {
-    const res = await fetch(
-      "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenes?page=1&limit=5&orderBy=id&orderDir=ASC",
-      { cache: 'no-store' }
-    );
+    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenes?page=1&limit=5&orderBy=id&orderDir=ASC";
     
+    const res = await fetch(API_URL, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
     if (!res.ok) {
-      console.error("API returned error:", res.status);
-      return { jovenes: [], pagination: { page: 1, limit: 5, total: 0, total_pages: 0, has_next: false, has_prev: false } };
+      console.error("API request failed:", res.status, res.statusText);
+      return { data: [], pagination: { page: 1, limit: 10, total: 0, total_pages: 0 } };
     }
     
-    const response = await res.json();
+    const apiResponse: ApiResponse = await res.json();
     
-    // The API returns { data: [...], pagination: {...} }
-    const jovenesData = response.data.map((joven: any) => ({
-      id: joven.id,
-      foto: joven.foto,
-      nombre: joven.nombre,
-      correo: joven.correo,
-      folio: joven.folio,
-      telefono: joven.telefono
-    }));
-    
+    // ✅ Lambda now returns complete presigned URLs, so NO transformation needed
+    // Just use the data as-is
     return {
-      jovenes: jovenesData,
-      pagination: response.pagination
+      data: apiResponse.data,
+      pagination: apiResponse.pagination,
     };
 
   } catch (error) {
-    console.error("Error fetching jóvenes data:", error);
-    return { jovenes: [], pagination: { page: 1, limit: 5, total: 0, total_pages: 0, has_next: false, has_prev: false } };
+    console.error("Error fetching jovenes from API:", error);
+    return { data: [], pagination: { page: 1, limit: 10, total: 0, total_pages: 0 } };
   }
 }
 
 export default async function JovenesPage() {
-  const initialData = await getJovenesData();
+  const { data, pagination } = await getJovenesData();
+
   return (
     <JovenesTable 
-      initialData={initialData.jovenes}
-      initialPagination={initialData.pagination}
+      initialData={data} 
+      initialPagination={pagination}
     />
   );
 }

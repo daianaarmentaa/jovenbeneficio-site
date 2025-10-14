@@ -29,7 +29,7 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
   const [totalPages, setTotalPages] = useState(initialPagination.total_pages);
   const [totalItems, setTotalItems] = useState(initialPagination.total);
   const [loading, setLoading] = useState(false);
-  const pageSize = 5;
+  const pageSize = 5; // ✅ This is your desired page size
   const [jovenToDelete, setJovenToDelete] = useState<Joven | null>(null);
   const isFirstRender = useRef(true);
 
@@ -49,14 +49,31 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
       }
 
       const response = await fetch(`${API_URL}?${params}`);
+      
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+      
       const data = await response.json();
 
-      setJovenes(data.data || []);
-      setTotalPages(data.pagination.total_pages);
-      setTotalItems(data.pagination.total);
-      setCurrentPage(data.pagination.page);
+      // ✅ Lambda now returns complete presigned URLs
+      // Validate data structure before setting state
+      if (data && data.data && Array.isArray(data.data)) {
+        setJovenes(data.data);
+        setTotalPages(data.pagination?.total_pages || 0);
+        setTotalItems(data.pagination?.total || 0);
+        setCurrentPage(data.pagination?.page || page);
+        
+        console.log(`Loaded ${data.data.length} jóvenes for page ${page}`);
+      } else {
+        console.error('Invalid data structure:', data);
+        setJovenes([]);
+      }
     } catch (error) {
       console.error("Error fetching jovenes:", error);
+      setJovenes([]);
+      setTotalPages(0);
+      setTotalItems(0);
     } finally {
       setLoading(false);
     }
@@ -66,9 +83,11 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      console.log('📊 Initial render with', initialData.length, 'jóvenes');
       return;
     }
     
+    console.log('🔄 Fetching page:', currentPage);
     fetchJovenes(currentPage, search);
   }, [currentPage]);
 

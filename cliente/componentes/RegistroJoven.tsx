@@ -156,7 +156,7 @@ export default function RegistroJoven() {
                 delete payload.foto; // No envíes la propiedad si no hay foto
             }
 
-            const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/register';
+            const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/registerJoven';
 
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',

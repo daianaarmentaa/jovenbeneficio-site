@@ -9,9 +9,16 @@ type EstablecimientoFormData = {
   nombreNegocio: string;
   adminId: string;
   categoria: number | '';
-  correo: string;
+  // Contact person info (encrypted)
+  nombreContacto: string;
+  apellidoPaternoContacto: string;
+  apellidoMaternoContacto: string;
+  correoContacto: string;
+  telefonoContacto: string;
   password: string;
-  telefono: string;
+  // Public info (not encrypted)
+  correoPublico: string;
+  telefonoPublico: string;
   direccion: {
     calle: string;
     numeroExt: string;
@@ -28,9 +35,14 @@ export default function RegistrarNegocio() {
     nombreNegocio: "",
     adminId: "",
     categoria: '',
-    correo: "",
+    nombreContacto: "",
+    apellidoPaternoContacto: "",
+    apellidoMaternoContacto: "",
+    correoContacto: "",
+    telefonoContacto: "",
     password: "",
-    telefono: "",
+    correoPublico: "",
+    telefonoPublico: "",
     direccion: {
       calle: "",
       numeroExt: "",
@@ -44,9 +56,11 @@ export default function RegistrarNegocio() {
 
   const [preview, setPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState({
-    correo: "",
+    correoContacto: "",
+    correoPublico: "",
     password: "",
-    telefono: "",
+    telefonoContacto: "",
+    telefonoPublico: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -75,27 +89,27 @@ export default function RegistrarNegocio() {
     }
 
     // Validación en tiempo real
-    if (name === "correo") {
+    if (name === "correoContacto" || name === "correoPublico") {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       setErrors((prev) => ({ 
         ...prev, 
-        correo: emailRegex.test(value) ? "" : "Correo inválido" 
+        [name]: emailRegex.test(value) ? "" : "Correo inválido" 
       }));
     }
     
     if (name === "password") {
-      const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
       setErrors((prev) => ({ 
         ...prev, 
         password: passRegex.test(value) ? "" : "Mínimo 8 caracteres, una letra y un número" 
       }));
     }
 
-    if (name === "telefono") {
+    if (name === "telefonoContacto" || name === "telefonoPublico") {
       const phoneRegex = /^\d{10}$/;
       setErrors((prev) => ({ 
         ...prev, 
-        telefono: phoneRegex.test(value) ? "" : "Número de teléfono inválido (10 dígitos)" 
+        [name]: phoneRegex.test(value) ? "" : "Número de teléfono inválido (10 dígitos)" 
       }));
     }
   };
@@ -118,7 +132,7 @@ export default function RegistrarNegocio() {
       return;
     }
 
-    if (errors.correo || errors.password || errors.telefono) {
+    if (Object.values(errors).some(error => error !== "")) {
       setFormError("Por favor, corrige los errores en el formulario.");
       return;
     }
@@ -126,29 +140,39 @@ export default function RegistrarNegocio() {
     setIsLoading(true);
 
     try {
-      // Preparar payload
-      const payload: any = {
-        nombre: formData.nombreNegocio,
-        id_categoria: formData.categoria,
-        id_admin: parseInt(formData.adminId), // Convertir a número
-        calle: formData.direccion.calle,
-        colonia: formData.direccion.colonia,
-        codigo_postal: formData.direccion.codigoPostal,
-        municipio: formData.direccion.municipio,
-        numero_ext: formData.direccion.numeroExt,
-        numero_int: formData.direccion.numeroInt || null,
-        numero_de_telefono: formData.telefono,
-      };
-
       // Convertir logo a Base64 si existe
+      let fotoBase64 = "";
       if (formData.logo) {
-        const logoBase64 = await toBase64(formData.logo);
-        payload.foto = logoBase64;
-      } else {
-        payload.foto = null;
+        fotoBase64 = await toBase64(formData.logo);
       }
 
-      const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/establecimiento';
+      // Preparar payload según el formato esperado por el Lambda
+      const payload = {
+        nombreEstablecimiento: formData.nombreNegocio,
+        nombreContacto: formData.nombreContacto,
+        apellidoPaternoContacto: formData.apellidoPaternoContacto,
+        apellidoMaternoContacto: formData.apellidoMaternoContacto || undefined,
+        correoContacto: formData.correoContacto,
+        telefonoContacto: formData.telefonoContacto,
+        password: formData.password,
+        idCategoria: Number(formData.categoria),
+        idAdmin: Number(formData.adminId),
+        foto: fotoBase64,
+        direccion: {
+          calle: formData.direccion.calle,
+          colonia: formData.direccion.colonia,
+          codigoPostal: formData.direccion.codigoPostal,
+          municipio: formData.direccion.municipio,
+          numeroExterior: formData.direccion.numeroExt,
+          numeroInterior: formData.direccion.numeroInt || undefined,
+        },
+        correoPublico: formData.correoPublico || formData.correoContacto,
+        telefonoPublico: formData.telefonoPublico || undefined,
+      };
+
+      const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/registroRestaurante';
+
+      console.log('Sending payload:', payload);
 
       const response = await fetch(API_ENDPOINT, {
         method: 'POST',
@@ -165,13 +189,14 @@ export default function RegistrarNegocio() {
       }
 
       // Éxito
-      alert('¡Establecimiento registrado con éxito!');
-      // Opcional: Redirigir o limpiar formulario
-      // window.location.href = '/home/negocios';
+      alert(`¡Establecimiento "${result.nombre}" registrado con éxito! ID: ${result.id}`);
+      
+      // Opcional: Redirigir después de registro exitoso
+      window.location.href = '/home/negocios';
       
     } catch (error: any) {
       console.error("Error al enviar el formulario:", error);
-      setFormError(error.message);
+      setFormError(error.message || "Error al registrar el establecimiento. Por favor, intenta de nuevo.");
     } finally {
       setIsLoading(false);
     }
@@ -203,9 +228,11 @@ export default function RegistrarNegocio() {
             <input 
               type="text" 
               name="nombreNegocio" 
+              value={formData.nombreNegocio}
               onChange={handleChange} 
               required 
               className="input input-bordered w-full !rounded" 
+              placeholder="Ej: Restaurante El Buen Sabor"
             />
           </div>
 
@@ -216,6 +243,7 @@ export default function RegistrarNegocio() {
             <input 
               type="number" 
               name="adminId" 
+              value={formData.adminId}
               onChange={handleChange} 
               required 
               className="input input-bordered w-full !rounded"
@@ -235,53 +263,142 @@ export default function RegistrarNegocio() {
 
       <div className="divider"></div>
 
-      {/* Datos de Contacto */}
+      {/* Datos de la Persona de Contacto */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-content">Datos de Contacto</h2>
+        <h2 className="text-xl font-semibold text-base-content">Datos de la Persona de Contacto (Privados)</h2>
+        <p className="text-sm text-base-content/70">Esta información será encriptada por seguridad.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label className="label">
-              <span className="label-text">Correo del negocio</span>
+              <span className="label-text">Nombre</span>
             </label>
             <input 
-              type="email" 
-              name="correo" 
+              type="text" 
+              name="nombreContacto" 
+              value={formData.nombreContacto}
               onChange={handleChange} 
               required 
-              className={`input input-bordered w-full !rounded ${errors.correo ? 'input-error' : ''}`}
-              placeholder="negocio@ejemplo.com"
+              className="input input-bordered w-full !rounded"
+              placeholder="Ej: María"
             />
-            {errors.correo && <span className="text-error text-xs mt-1">{errors.correo}</span>}
           </div>
 
           <div>
             <label className="label">
-              <span className="label-text">Teléfono</span>
+              <span className="label-text">Apellido Paterno</span>
+            </label>
+            <input 
+              type="text" 
+              name="apellidoPaternoContacto" 
+              value={formData.apellidoPaternoContacto}
+              onChange={handleChange} 
+              required 
+              className="input input-bordered w-full !rounded"
+              placeholder="Ej: González"
+            />
+          </div>
+
+          <div>
+            <label className="label">
+              <span className="label-text">Apellido Materno (Opcional)</span>
+            </label>
+            <input 
+              type="text" 
+              name="apellidoMaternoContacto" 
+              value={formData.apellidoMaternoContacto}
+              onChange={handleChange} 
+              className="input input-bordered w-full !rounded"
+              placeholder="Ej: López"
+            />
+          </div>
+
+          <div>
+            <label className="label">
+              <span className="label-text">Correo del Contacto</span>
+            </label>
+            <input 
+              type="email" 
+              name="correoContacto" 
+              value={formData.correoContacto}
+              onChange={handleChange} 
+              required 
+              className={`input input-bordered w-full !rounded ${errors.correoContacto ? 'input-error' : ''}`}
+              placeholder="contacto@ejemplo.com"
+            />
+            {errors.correoContacto && <span className="text-error text-xs mt-1">{errors.correoContacto}</span>}
+          </div>
+
+          <div>
+            <label className="label">
+              <span className="label-text">Teléfono del Contacto</span>
             </label>
             <input 
               type="tel" 
-              name="telefono" 
+              name="telefonoContacto" 
+              value={formData.telefonoContacto}
               onChange={handleChange} 
               required 
-              className={`input input-bordered w-full !rounded ${errors.telefono ? 'input-error' : ''}`}
+              className={`input input-bordered w-full !rounded ${errors.telefonoContacto ? 'input-error' : ''}`}
               placeholder="10 dígitos"
               maxLength={10}
             />
-            {errors.telefono && <span className="text-error text-xs mt-1">{errors.telefono}</span>}
+            {errors.telefonoContacto && <span className="text-error text-xs mt-1">{errors.telefonoContacto}</span>}
           </div>
 
-          <div className="sm:col-span-2">
+          <div>
             <label className="label">
               <span className="label-text">Contraseña</span>
             </label>
             <input 
               type="password" 
               name="password" 
+              value={formData.password}
               onChange={handleChange} 
               required 
               className={`input input-bordered w-full !rounded ${errors.password ? 'input-error' : ''}`}
+              placeholder="Mínimo 8 caracteres"
             />
             {errors.password && <span className="text-error text-xs mt-1">{errors.password}</span>}
+          </div>
+        </div>
+      </div>
+
+      <div className="divider"></div>
+
+      {/* Datos Públicos del Negocio */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-base-content">Datos Públicos del Negocio (Opcionales)</h2>
+        <p className="text-sm text-base-content/70">Esta información será visible para los clientes.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label className="label">
+              <span className="label-text">Correo Público</span>
+            </label>
+            <input 
+              type="email" 
+              name="correoPublico" 
+              value={formData.correoPublico}
+              onChange={handleChange} 
+              className={`input input-bordered w-full !rounded ${errors.correoPublico ? 'input-error' : ''}`}
+              placeholder="info@negocio.com (opcional)"
+            />
+            {errors.correoPublico && <span className="text-error text-xs mt-1">{errors.correoPublico}</span>}
+          </div>
+
+          <div>
+            <label className="label">
+              <span className="label-text">Teléfono Público</span>
+            </label>
+            <input 
+              type="tel" 
+              name="telefonoPublico" 
+              value={formData.telefonoPublico}
+              onChange={handleChange} 
+              className={`input input-bordered w-full !rounded ${errors.telefonoPublico ? 'input-error' : ''}`}
+              placeholder="10 dígitos (opcional)"
+              maxLength={10}
+            />
+            {errors.telefonoPublico && <span className="text-error text-xs mt-1">{errors.telefonoPublico}</span>}
           </div>
         </div>
       </div>
@@ -299,6 +416,7 @@ export default function RegistrarNegocio() {
             <input 
               type="text" 
               name="calle" 
+              value={formData.direccion.calle}
               onChange={handleChange} 
               required 
               className="input input-bordered w-full !rounded" 
@@ -312,6 +430,7 @@ export default function RegistrarNegocio() {
             <input 
               type="text" 
               name="numeroExt" 
+              value={formData.direccion.numeroExt}
               onChange={handleChange} 
               required 
               className="input input-bordered w-full !rounded" 
@@ -325,6 +444,7 @@ export default function RegistrarNegocio() {
             <input 
               type="text" 
               name="numeroInt" 
+              value={formData.direccion.numeroInt}
               onChange={handleChange} 
               className="input input-bordered w-full !rounded" 
             />
@@ -337,6 +457,7 @@ export default function RegistrarNegocio() {
             <input 
               type="text" 
               name="codigoPostal" 
+              value={formData.direccion.codigoPostal}
               onChange={handleChange} 
               required 
               className="input input-bordered w-full !rounded" 
@@ -350,6 +471,7 @@ export default function RegistrarNegocio() {
             <input 
               type="text" 
               name="colonia" 
+              value={formData.direccion.colonia}
               onChange={handleChange} 
               required 
               className="input input-bordered w-full !rounded" 
@@ -363,6 +485,7 @@ export default function RegistrarNegocio() {
             <input 
               type="text" 
               name="municipio" 
+              value={formData.direccion.municipio}
               onChange={handleChange} 
               required 
               className="input input-bordered w-full !rounded" 
@@ -405,8 +528,9 @@ export default function RegistrarNegocio() {
 
       {/* Error Message */}
       {formError && (
-        <div className="text-center text-error p-2 bg-error/20 rounded-md">
-          {formError}
+        <div className="alert alert-error">
+          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <span>{formError}</span>
         </div>
       )}
 
