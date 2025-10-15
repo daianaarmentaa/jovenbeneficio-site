@@ -26,16 +26,13 @@ type ApiResponse = {
   };
 };
 
-// S3 bucket URL - replace with your actual S3 bucket URL
-const S3_BUCKET_URL = "https://beneficiojoven-photos.s3.us-east-1.amazonaws.com";
-
 // Función para obtener los datos del API real
-async function getNegociosData(): Promise<Negocio[]> {
+async function getNegociosData() {
   try {
-    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/establecimientos";
+    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/establecimientos?page=1&limit=5&orderBy=id&orderDir=ASC";
     
     const res = await fetch(API_URL, {
-      cache: 'no-store', // Obtiene datos frescos en cada carga
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -43,31 +40,51 @@ async function getNegociosData(): Promise<Negocio[]> {
 
     if (!res.ok) {
       console.error("API request failed:", res.status, res.statusText);
-      return [];
+      return { 
+        data: [], 
+        pagination: { 
+          page: 1, 
+          limit: 5, 
+          total: 0, 
+          total_pages: 0,
+          has_next: false,
+          has_prev: false
+        } 
+      };
     }
     
     const apiResponse: ApiResponse = await res.json();
     
-    // Transform data to add full S3 URLs for photos
-    const negociosData = apiResponse.data.map((negocio) => ({
-      ...negocio,
-      foto: negocio.foto ? `${S3_BUCKET_URL}/${negocio.foto}` : `${S3_BUCKET_URL}/fotos_establecimientos/default-establishment.jpg`,
-    }));
-
-    return negociosData;
+    // ✅ Lambda now returns complete presigned URLs, so NO transformation needed
+    // Just use the data as-is
+    return {
+      data: apiResponse.data,
+      pagination: apiResponse.pagination,
+    };
 
   } catch (error) {
-    console.error("Error fetching data from API:", error);
-    return [];
+    console.error("Error fetching negocios from API:", error);
+    return { 
+      data: [], 
+      pagination: { 
+        page: 1, 
+        limit: 5, 
+        total: 0, 
+        total_pages: 0,
+        has_next: false,
+        has_prev: false
+      } 
+    };
   }
 }
 
 export default async function NegociosPage() {
-  // Obtenemos los datos antes de renderizar la página
-  const initialNegocios = await getNegociosData();
+  const { data, pagination } = await getNegociosData();
 
-  // Renderizamos el componente de cliente, pasándole los datos iniciales
   return (
-    <NegociosTable initialData={initialNegocios} />
+    <NegociosTable 
+      initialData={data} 
+      initialPagination={pagination}
+    />
   );
 }
