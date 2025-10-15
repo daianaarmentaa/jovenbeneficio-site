@@ -8,6 +8,16 @@ type NegocioFavoritos = { name: string; favoritos: number };
 const barColors = ["#71D1FE", "#FFB667", "#7AF1A7", "#FF9FA0", "#E9D4FF", "#FCA4D4"];
 
 export default function NegociosFavoritos({ data }: { data: NegocioFavoritos[] }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="card bg-base-100 shadow-lg">
+        <div className="card-body">
+          <h2 className="card-title"><Heart className="text-neutral" /> Negocios Favoritos</h2>
+          <p className="text-center text-gray-500">No hay datos disponibles</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="card bg-base-100 shadow-lg">
       <div className="card-body">
