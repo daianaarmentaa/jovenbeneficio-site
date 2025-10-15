@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Joven } from "../../app/home/jovenes/page"; 
 import DeleteConfirmationModal from "../DeleteConfirmationModel";
@@ -8,25 +8,110 @@ import Pagination from "../Pagination";
 import JovenesCardView from "./JovenesCardView";
 import JovenesDesktopTable from "./JovenesDesktopTable";
 
-export default function JovenesTable({ initialData }: { initialData: Joven[] }) {
+const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenes";
+
+type PaginationInfo = {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+};
+
+type Props = {
+  initialData: Joven[];
+  initialPagination: PaginationInfo;
+};
+
+export default function JovenesTable({ initialData, initialPagination }: Props) {
   const [jovenes, setJovenes] = useState<Joven[]>(initialData); 
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const [currentPage, setCurrentPage] = useState(initialPagination.page);
+  const [totalPages, setTotalPages] = useState(initialPagination.total_pages);
+  const [totalItems, setTotalItems] = useState(initialPagination.total);
+  const [loading, setLoading] = useState(false);
+  const pageSize = 5; // ✅ This is your desired page size
   const [jovenToDelete, setJovenToDelete] = useState<Joven | null>(null);
+  const isFirstRender = useRef(true);
+
+  // Fetch data from API
+  const fetchJovenes = async (page: number, searchQuery: string = "") => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: pageSize.toString(),
+        orderBy: 'id',
+        orderDir: 'ASC'
+      });
+
+      if (searchQuery) {
+        params.append('search', searchQuery);
+      }
+
+      const response = await fetch(`${API_URL}?${params}`);
+      
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+      
+      const data = await response.json();
+
+      // ✅ Lambda now returns complete presigned URLs
+      // Validate data structure before setting state
+      if (data && data.data && Array.isArray(data.data)) {
+        setJovenes(data.data);
+        setTotalPages(data.pagination?.total_pages || 0);
+        setTotalItems(data.pagination?.total || 0);
+        setCurrentPage(data.pagination?.page || page);
+        
+        console.log(`Loaded ${data.data.length} jóvenes for page ${page}`);
+      } else {
+        console.error('Invalid data structure:', data);
+        setJovenes([]);
+      }
+    } catch (error) {
+      console.error("Error fetching jovenes:", error);
+      setJovenes([]);
+      setTotalPages(0);
+      setTotalItems(0);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch when page changes
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      console.log('📊 Initial render with', initialData.length, 'jóvenes');
+      return;
+    }
+    
+    console.log('🔄 Fetching page:', currentPage);
+    fetchJovenes(currentPage, search);
+  }, [currentPage]);
+
+  // Fetch when search changes
+  const handleSearchChange = (newSearch: string) => {
+    setSearch(newSearch);
+    setCurrentPage(1);
+    fetchJovenes(1, newSearch);
+  };
 
   const handleDelete = async () => {
     if (!jovenToDelete) return;
     try {
-      // llamada a la API
-      const response = await fetch(`https://jsonplaceholder.typicode.com/users/${jovenToDelete.id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `${API_URL}/${jovenToDelete.id}`, 
+        { method: 'DELETE' }
+      );
+      
       if (!response.ok) {
         throw new Error("Error al eliminar el joven.");
       }
-      setJovenes(prevJovenes => prevJovenes.filter(j => j.id !== jovenToDelete.id));
-      alert(`Joven "${jovenToDelete.name}" eliminado con éxito.`);
+      
+      fetchJovenes(currentPage, search);
+      alert(`Joven "${jovenToDelete.nombre}" eliminado con éxito.`);
     } catch (error) {
       console.error(error);
       alert("No se pudo eliminar el registro.");
@@ -35,18 +120,17 @@ export default function JovenesTable({ initialData }: { initialData: Joven[] }) 
     }
   };
 
-  const filtered = jovenes.filter((j) =>
-    j.name.toLowerCase().includes(search.toLowerCase()) ||
-    j.folio.toLowerCase().includes(search.toLowerCase())
-  );
-  const totalPages = Math.ceil(filtered.length / pageSize);
-  const paginated = filtered.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const handlePrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
-  const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
-  const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -56,23 +140,33 @@ export default function JovenesTable({ initialData }: { initialData: Joven[] }) 
           placeholder="Buscar por nombre o folio..."
           className="input input-bordered input-m flex-1 !rounded-sm  w-full placeholder:text-sm sm:w-full"
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setCurrentPage(1); 
-          }}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          disabled={loading}
         />
         <Link href="/home/jovenes/registrarJoven">
-          <button className="btn btn-primary btn-m text-sm rounded w-full sm:w-full">Registrar Joven</button>
+          <button className="btn btn-primary btn-lg text-sm w-full sm:w-full rounded">
+            Registrar Joven
+          </button>
         </Link>
       </div>
-      <JovenesDesktopTable 
-        jovenes={paginated} 
-        onDelete={(joven) => setJovenToDelete(joven)} 
-      />
-      <JovenesCardView 
-        jovenes={paginated} 
-        onDelete={(joven) => setJovenToDelete(joven)} 
-      />
+
+      {loading ? (
+        <div className="flex justify-center items-center py-10">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      ) : (
+        <>
+          <JovenesDesktopTable 
+            jovenes={jovenes} 
+            onDelete={(joven) => setJovenToDelete(joven)} 
+          />
+          
+          <JovenesCardView 
+            jovenes={jovenes} 
+            onDelete={(joven) => setJovenToDelete(joven)} 
+          />
+        </>
+      )}
     
       <Pagination
         currentPage={currentPage}
@@ -80,9 +174,14 @@ export default function JovenesTable({ initialData }: { initialData: Joven[] }) 
         onPrev={handlePrev}
         onNext={handleNext}
       />
+
+      <div className="text-center text-sm text-base-content/70">
+        Mostrando {jovenes.length} de {totalItems} jóvenes
+      </div>
+      
       <DeleteConfirmationModal
         isOpen={!!jovenToDelete}
-        itemName={jovenToDelete?.name || ''}
+        itemName={jovenToDelete?.nombre || ''}
         onClose={() => setJovenToDelete(null)}
         onConfirm={handleDelete}
       />

@@ -1,6 +1,70 @@
 import PromocionesTable from "@/componentes/PromocionesTable";
-export default function PromocionesPage() {
-    return(
-        <PromocionesTable />
-    );
+
+// Updated type to match API response
+export type Promocion = {
+  id: number;
+  nombre_promocion: string;
+  nombre_establecimiento: string;
+  fecha_creacion: string;
+  fecha_expiracion: string;
+  estado: 'activa' | 'expirada' | 'cancelada';
+  foto: string;
+  id_establecimiento: number;
+};
+
+// API Response type
+type ApiResponse = {
+  data: Promocion[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+    has_next: boolean;
+    has_prev: boolean;
+  };
+};
+
+// S3 bucket URL
+const S3_BUCKET_URL = "https://beneficiojoven-photos.s3.us-east-1.amazonaws.com";
+
+// Function to fetch promociones from API
+async function getPromocionesData(): Promise<Promocion[]> {
+  try {
+    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/promociones?orderBy=id&orderDir=ASC";
+    
+    const res = await fetch(API_URL, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      console.error("API request failed:", res.status, res.statusText);
+      return [];
+    }
+    
+    const apiResponse: ApiResponse = await res.json();
+    
+    // Transform data to add full S3 URLs for photos
+    const promocionesData = apiResponse.data.map((promocion) => ({
+      ...promocion,
+      foto: promocion.foto ? `${S3_BUCKET_URL}/${promocion.foto}` : `${S3_BUCKET_URL}/fotos_promociones/default-promo.jpg`,
+    }));
+
+    return promocionesData;
+
+  } catch (error) {
+    console.error("Error fetching promociones from API:", error);
+    return [];
+  }
+}
+
+export default async function PromocionesPage() {
+  const initialPromociones = await getPromocionesData();
+
+  return (
+    <PromocionesTable initialData={initialPromociones} />
+  );
 }

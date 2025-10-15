@@ -17,14 +17,38 @@ export default function NegociosTable({ initialData }: { initialData: Negocio[] 
   const pageSize = 5;
   const [negocioToDelete, setNegocioToDelete] = useState<Negocio | null>(null);
 
-  const handleDelete = async () => { /* ... */ };
+  const handleDelete = async () => {
+    if (!negocioToDelete) return;
+
+    try {
+      // TODO: Call DELETE API endpoint here
+      // const response = await fetch(`/api/establecimientos/${negocioToDelete.id}`, {
+      //   method: 'DELETE',
+      // });
+
+      // For now, just remove from local state
+      setNegocios(negocios.filter(n => n.id !== negocioToDelete.id));
+      setNegocioToDelete(null);
+      
+      // Show success message
+      alert('Negocio eliminado exitosamente');
+    } catch (error) {
+      console.error('Error deleting negocio:', error);
+      alert('Error al eliminar el negocio');
+    }
+  };
+
   const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
   const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   
+  // Updated filter to use new field names
   const filtered = negocios.filter((n) =>
-    n.nombre.toLowerCase().includes(search.toLowerCase()) ||
-    n.categoria.toLowerCase().includes(search.toLowerCase())
+    n.nombre_establecimiento.toLowerCase().includes(search.toLowerCase()) ||
+    n.categoria.toLowerCase().includes(search.toLowerCase()) ||
+    n.colonia.toLowerCase().includes(search.toLowerCase()) ||
+    n.nombre_contacto_completo?.toLowerCase().includes(search.toLowerCase())
   );
+  
   const totalPages = Math.ceil(filtered.length / pageSize);
   const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
@@ -34,8 +58,8 @@ export default function NegociosTable({ initialData }: { initialData: Negocio[] 
       <div className="flex flex-col sm:flex-row gap-2 w-full">
         <input
           type="search"
-          placeholder="Buscar por nombre o categoría..."
-          className="input input-bordered input-m flex-1 !rounded-sm placeholder:text-sm w-full sm:w-auto"
+          placeholder="Buscar por nombre, categoría, colonia ..."
+          className="input input-bordered input-lg flex-1 !rounded-sm placeholder:text-sm w-full sm:w-auto"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -49,24 +73,35 @@ export default function NegociosTable({ initialData }: { initialData: Negocio[] 
         </Link>
       </div>
 
-      <NegociosDesktopTable 
-        negocios={paginated} 
-        onDelete={(negocio) => setNegocioToDelete(negocio)} 
-      />
-      <NegociosCardView 
-        negocios={paginated} 
-        onDelete={(negocio) => setNegocioToDelete(negocio)} 
-      />
+      {paginated.length === 0 ? (
+        <div className="text-center py-8 text-base-content/70">
+          No se encontraron establecimientos
+        </div>
+      ) : (
+        <>
+          <NegociosDesktopTable 
+            negocios={paginated} 
+            onDelete={(negocio) => setNegocioToDelete(negocio)} 
+          />
+          <NegociosCardView 
+            negocios={paginated} 
+            onDelete={(negocio) => setNegocioToDelete(negocio)} 
+          />
+        </>
+      )}
       
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPrev={handlePrev}
-        onNext={handleNext}
-      />
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPrev={handlePrev}
+          onNext={handleNext}
+        />
+      )}
+
       <DeleteConfirmationModal
         isOpen={!!negocioToDelete}
-        itemName={negocioToDelete?.nombre || ''}
+        itemName={negocioToDelete?.nombre_establecimiento || ''}
         onClose={() => setNegocioToDelete(null)}
         onConfirm={handleDelete}
       />

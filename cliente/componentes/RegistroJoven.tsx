@@ -4,8 +4,32 @@ import { useState } from "react";
 import { User } from "lucide-react";
 import Link from "next/link";
 
+type JovenFormData = {
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  fechaNacimiento: string;
+  genero: string;
+  direccion: {
+    calle: string;
+    numeroExterior: string;
+    numeroInterior: string;
+    colonia: string;
+    codigoPostal: string;
+    municipio: string;
+    estado: string;
+  };
+  curp: string;
+  correo: string;
+  celular: string;
+  password: string;
+  consentimientoAceptado: boolean;
+  foto?: File | null; // <-- LA CLAVE ES EL '?'
+};
+
 export default function RegistroJoven() {
-  const [formData, setFormData] = useState({
+  // --- PASO 2: APLICA EL TIPO A TU ESTADO ---
+  const [formData, setFormData] = useState<JovenFormData>({
     nombre: "",
     apellidoPaterno: "",
     apellidoMaterno: "",
@@ -18,12 +42,14 @@ export default function RegistroJoven() {
       colonia: "",
       codigoPostal: "",
       municipio: "",
+      estado: "",
     },
     curp: "",
     correo: "",
     celular: "",
     password: "",
-    foto: null as File | null,
+    consentimientoAceptado: false,
+    foto: null,
   });
 
   const [preview, setPreview] = useState<string | null>(null);
@@ -35,8 +61,12 @@ export default function RegistroJoven() {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    let finalValue = value;
+    const { name, value, type, checked } = e.target as HTMLInputElement;
+    let finalValue: any = value;
+
+    if (type == 'checkbox'){
+      finalValue = checked;
+    }
 
     if (name === 'curp') {
       finalValue = value.toUpperCase();
@@ -46,10 +76,12 @@ export default function RegistroJoven() {
       const files = (e.target as HTMLInputElement).files;
       if (files && files.length > 0) {
         const file = files[0];
-        setFormData({ ...formData, [name]: file });
+        // ✅ LÍNEA CORREGIDA
+        setFormData(prev => ({ ...prev, [name]: file }));
         setPreview(URL.createObjectURL(file));
       }
-    } else if (name.includes('.')) {
+    } 
+    else if (name.includes('.')) {
       const [parent, child] = name.split('.');
       setFormData(prev => ({
         ...prev,
@@ -59,7 +91,10 @@ export default function RegistroJoven() {
         }
       }));
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        [name]: finalValue,
+      }));
     }
 
     if (name === "correo") {
@@ -85,11 +120,71 @@ export default function RegistroJoven() {
 
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Datos enviados:", formData);
-    alert("Joven registrado con éxito");
-  };
+    // ... Debajo de tus otros useState
+    const [isLoading, setIsLoading] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
+
+    // Función para convertir un archivo a Base64
+    const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        // Quita el prefijo "data:image/jpeg;base64,"
+        reader.onload = () => resolve((reader.result as string).split(',')[1]);
+        reader.onerror = error => reject(error);
+    });
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setFormError(null); // Limpia errores previos
+
+        // Validación extra en el frontend
+        if (!formData.consentimientoAceptado) {
+            setFormError("Debes aceptar el aviso de privacidad para registrarte.");
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const payload = { ...formData };
+        
+            // Si hay una foto, la convertimos a Base64
+            if (formData.foto) {
+                const fotoBase64 = await toBase64(formData.foto);
+                payload.foto = fotoBase64 as any; // Usamos 'any' para evitar problemas de tipo
+            } else {
+                delete payload.foto; // No envíes la propiedad si no hay foto
+            }
+
+            const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/registerJoven';
+
+            const response = await fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                // Si la API devuelve un error (ej. 409, 500), lo mostramos
+                throw new Error(result.message || 'Ocurrió un error en el servidor.');
+            }
+
+            // ¡Éxito!
+            alert('¡Joven registrado con éxito!');
+            // Aquí podrías redirigir al usuario o limpiar el formulario
+            // window.location.href = '/ruta-de-exito';
+
+        } catch (error: any) {
+            console.error("Error al enviar el formulario:", error);
+            setFormError(error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
   return (
     <form
@@ -138,12 +233,12 @@ export default function RegistroJoven() {
           </div>
           <div>
             <label className="label"><span className="label-text">Género</span></label>
-            <select name="genero" onChange={handleChange} value= {formData.genero} required className="select select-bordered w-full !rounded">
-              <option disabled value="">Selecciona una opción</option>
-              <option>Masculino</option>
-              <option>Femenino</option>
-              <option>Otro</option>
-            </select>
+              <select name="genero" onChange={handleChange} value={formData.genero} required className="select select-bordered w-full !rounded">
+                <option disabled value="">Selecciona una opción</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
           </div>
         </div>
       </div>
@@ -177,6 +272,17 @@ export default function RegistroJoven() {
           <div>
             <label className="label"><span className="label-text">Municipio / Alcaldía</span></label>
             <input type="text" name="direccion.municipio" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+          </div>
+          <div>
+            <label className="label"><span className="label-text">Estado</span></label>
+            <input 
+              type="text" 
+              name="direccion.estado" 
+              value={formData.direccion.estado} 
+              onChange={handleChange} 
+              required 
+              className="input input-bordered w-full !rounded" 
+            />
           </div>
         </div>
       </div>
@@ -222,17 +328,52 @@ export default function RegistroJoven() {
         </div>
       </div>
 
-      {/* --- SECCIÓN 5: BOTONES DE ACCIÓN --- */}
-      <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-base-300 pt-6">
-        <Link href="/home/jovenes">
-          <button type="button" className="btn btn-ghost rounded w-full sm:w-auto">
-            Cancelar
-          </button>
-        </Link>
-        <button type="submit" className="btn btn-primary rounded w-full sm:w-auto">
-          Registrar
-        </button>
+      <div className="divider"></div>
+
+      {/* --- SECCIÓN 4: CONSENTIMIENTO --- */}
+      <div className="space-y-2">
+        <div className="flex items-start">
+          <div className="flex items-center h-5">
+            <input
+              id="consentimiento"
+              name="consentimientoAceptado"
+              type="checkbox"
+              checked={formData.consentimientoAceptado}
+              onChange={handleChange}
+              className="checkbox checkbox-primary"
+              required
+            />
+          </div>
+          <div className="ml-3 text-sm">
+            <label htmlFor="consentimiento" className="label-text">
+              He leído y acepto el{" "}
+              <a href="/aviso-de-privacidad" target="_blank" className="link link-primary">
+                Aviso de Privacidad
+              </a>
+              .
+            </label>
+          </div>
+        </div>
       </div>
+
+        {/* --- SECCIÓN 5: BOTONES DE ACCIÓN --- */}
+        {/* Muestra un mensaje de error si existe */}
+        {formError && (
+          <div className="text-center text-error p-2 bg-error/20 rounded-md mb-4">
+            {formError}
+          </div>
+        )}
+
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t border-base-300 pt-6">
+          <Link href="/home/jovenes">
+            <button type="button" className="btn btn-ghost rounded w-full sm:w-auto" disabled={isLoading}>
+              Cancelar
+            </button>
+          </Link>
+          <button type="submit" className="btn btn-primary rounded w-full sm:w-auto" disabled={isLoading}>
+            {isLoading ? <span className="loading loading-spinner"></span> : 'Registrar'}
+          </button>
+        </div>
     </form>
   );
 }

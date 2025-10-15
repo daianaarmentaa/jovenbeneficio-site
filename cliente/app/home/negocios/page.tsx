@@ -1,40 +1,63 @@
 import NegociosTable from "@/componentes/tablaNegocios/NegociosTable";
 
+// Updated type to match API response
 export type Negocio = {
   id: number;
-  nombre: string;
-  categoria: string;
+  nombre_establecimiento: string;
+  nombre_contacto_completo: string;
+  foto: string;
+  colonia: string;
   correo: string;
   telefono: string;
-  direccion: {
-    ciudad: string;
+  categoria: string;
+  fecha_registro: string;
+};
+
+// API Response type
+type ApiResponse = {
+  data: Negocio[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+    has_next: boolean;
+    has_prev: boolean;
   };
 };
 
-// Función para obtener los datos en el servidor
+// S3 bucket URL - replace with your actual S3 bucket URL
+const S3_BUCKET_URL = "https://beneficiojoven-photos.s3.us-east-1.amazonaws.com";
+
+// Función para obtener los datos del API real
 async function getNegociosData(): Promise<Negocio[]> {
   try {
-    const res = await fetch("https://jsonplaceholder.typicode.com/users", {
-      cache: 'no-store' // Obtiene datos frescos en cada carga
+    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/establecimientos";
+    
+    const res = await fetch(API_URL, {
+      cache: 'no-store', // Obtiene datos frescos en cada carga
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
-    if (!res.ok) return [];
+
+    if (!res.ok) {
+      console.error("API request failed:", res.status, res.statusText);
+      return [];
+    }
     
-    const data = await res.json();
+    const apiResponse: ApiResponse = await res.json();
     
-    // Transforma los datos en el servidor
-    const categoriasPosibles = ['Restaurante', 'Tienda', 'Servicios', 'Salud'];
-    const negociosData = data.map((u: any, index: number) => ({
-      id: u.id,
-      nombre: u.company.name,
-      categoria: categoriasPosibles[index % categoriasPosibles.length],
-      correo: u.email,
-      telefono: u.phone,
-      direccion: { ciudad: u.address.city },
+    // Transform data to add full S3 URLs for photos
+    const negociosData = apiResponse.data.map((negocio) => ({
+      ...negocio,
+      foto: negocio.foto ? `${S3_BUCKET_URL}/${negocio.foto}` : `${S3_BUCKET_URL}/fotos_establecimientos/default-establishment.jpg`,
     }));
+
     return negociosData;
 
   } catch (error) {
-    console.error("Error fetching data on server:", error);
+    console.error("Error fetching data from API:", error);
     return [];
   }
 }
