@@ -6,6 +6,16 @@ import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Ba
 type NegocioVisitas = { name: string; visitas: number};
 
 export default function NegociosMasVisitados({ data }: { data: NegocioVisitas[]}) {
+    if (!data || data.length === 0) {
+        return (
+            <div className="card bg-base-100 shadow-lg">
+            <div className="card-body">
+                <h2 className="card-title"><BarChart3 className="text-neutral" /> Negocios Más Visitados</h2>
+                <p className="text-center text-gray-500">No hay datos disponibles</p>
+            </div>
+            </div>
+        );
+    }
     return(
         <div className="card lg:col-span-2 bg-base-100 shadow-lg">
             <div className="card-body">

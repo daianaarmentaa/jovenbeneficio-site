@@ -6,6 +6,17 @@ import { ResponsiveContainer, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, A
 type UsoTarjetaData = { fecha: string; "Usos Tarjeta Digital": number };
 
 export default function UsoTarjetaDigital({ data }: { data: UsoTarjetaData[] }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="card lg:col-span-4 bg-base-100 shadow-lg">
+        <div className="card-body">
+          <h2 className="card-title"><Activity className="text-neutral" /> Uso de Tarjeta Digital (Últ. 7 días)</h2>
+          <p className="text-center text-gray-500">No hay datos disponibles</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="card lg:col-span-4 bg-base-100 shadow-lg">
       <div className="card-body">
