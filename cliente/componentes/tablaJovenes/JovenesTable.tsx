@@ -9,6 +9,7 @@ import JovenesCardView from "./JovenesCardView";
 import JovenesDesktopTable from "./JovenesDesktopTable";
 
 const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenes";
+const DELETE_API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenesDelete";
 
 type PaginationInfo = {
   page: number;
@@ -29,7 +30,7 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
   const [totalPages, setTotalPages] = useState(initialPagination.total_pages);
   const [totalItems, setTotalItems] = useState(initialPagination.total);
   const [loading, setLoading] = useState(false);
-  const pageSize = 5; // ✅ This is your desired page size
+  const pageSize = 5;
   const [jovenToDelete, setJovenToDelete] = useState<Joven | null>(null);
   const isFirstRender = useRef(true);
 
@@ -56,8 +57,6 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
       
       const data = await response.json();
 
-      // ✅ Lambda now returns complete presigned URLs
-      // Validate data structure before setting state
       if (data && data.data && Array.isArray(data.data)) {
         setJovenes(data.data);
         setTotalPages(data.pagination?.total_pages || 0);
@@ -100,21 +99,49 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
 
   const handleDelete = async () => {
     if (!jovenToDelete) return;
+    
     try {
+      console.log(`🗑️ Deleting joven with ID: ${jovenToDelete.id}`);
+      
+      // ✅ USE THE CORRECT DELETE ENDPOINT
       const response = await fetch(
-        `${API_URL}/${jovenToDelete.id}`, 
-        { method: 'DELETE' }
+        `${DELETE_API_URL}/${jovenToDelete.id}`, 
+        { 
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
       );
       
       if (!response.ok) {
-        throw new Error("Error al eliminar el joven.");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Error al eliminar el joven.");
       }
       
-      fetchJovenes(currentPage, search);
+      const result = await response.json();
+      console.log('✅ Delete successful:', result);
+      
+      // Calculate if we need to go to previous page
+      // If we're deleting the last item on the current page and we're not on page 1
+      const isLastItemOnPage = jovenes.length === 1;
+      const shouldGoToPreviousPage = isLastItemOnPage && currentPage > 1;
+      
+      if (shouldGoToPreviousPage) {
+        // Go to previous page
+        console.log('📄 Going to previous page after delete');
+        setCurrentPage(currentPage - 1);
+        await fetchJovenes(currentPage - 1, search);
+      } else {
+        // Refresh the current page
+        console.log('🔄 Refreshing current page after delete');
+        await fetchJovenes(currentPage, search);
+      }
+      
       alert(`Joven "${jovenToDelete.nombre}" eliminado con éxito.`);
     } catch (error) {
-      console.error(error);
-      alert("No se pudo eliminar el registro.");
+      console.error('❌ Delete error:', error);
+      alert(error instanceof Error ? error.message : "No se pudo eliminar el registro.");
     } finally {
       setJovenToDelete(null);
     }
@@ -138,7 +165,7 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
         <input
           type="search"
           placeholder="Buscar por nombre o folio..."
-          className="input input-bordered input-lg flex-1 !rounded-sm  w-full placeholder:text-sm sm:w-full"
+          className="input input-bordered input-lg flex-1 !rounded-sm w-full placeholder:text-sm sm:w-full"
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
           disabled={loading}
