@@ -67,7 +67,7 @@ export default function NegociosTable({ initialData }: { initialData: Negocio[] 
           }}
         />
         <Link href="/home/negocios/registrarNegocio">
-          <button className="btn btn-primary btn-m text-sm rounded w-full sm:w-auto">
+          <button className="btn btn-primary btn-lg text-sm rounded w-full sm:w-auto">
             Registrar Negocio
           </button>
         </Link>

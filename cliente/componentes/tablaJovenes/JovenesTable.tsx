@@ -138,7 +138,7 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
         <input
           type="search"
           placeholder="Buscar por nombre o folio..."
-          className="input input-bordered input-m flex-1 !rounded-sm  w-full placeholder:text-sm sm:w-full"
+          className="input input-bordered input-lg flex-1 !rounded-sm  w-full placeholder:text-sm sm:w-full"
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
           disabled={loading}

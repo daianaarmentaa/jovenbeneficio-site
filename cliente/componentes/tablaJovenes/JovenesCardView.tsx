@@ -3,7 +3,7 @@
 // ============================================
 
 import { Trash2 } from 'lucide-react';
-import { Joven } from "../app/home/jovenes/page"; // ✅ Import from page
+import { Joven } from "../../app/home/jovenes/page"; // ✅ Import from page
 
 type CardViewProps = {
   jovenes: Joven[];

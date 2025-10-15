@@ -61,11 +61,11 @@ export default function NegociosCardView({ negocios, onDelete }: CardViewProps) 
               {/* ID and Colonia */}
               <div className="flex gap-4 text-xs">
                 <div>
-                  <span className="text-base-content/60">ID:</span> 
+                  <span className="text-base-content font-semibold">ID:</span> 
                   <span className="ml-1 font-semibold">{negocio.id}</span>
                 </div>
                 <div className="flex-1">
-                  <span className="text-base-content/60">📍</span>
+                  <span className="text-base-content">📍</span>
                   <span className="ml-1">{negocio.colonia}</span>
                 </div>
               </div>
@@ -83,7 +83,7 @@ export default function NegociosCardView({ negocios, onDelete }: CardViewProps) 
                           {idx === 0 ? 'Público: ' : 'Privado: '}
                         </span>
                       )}
-                      <span className="text-primary">{email}</span>
+                      <span className="text-black">{email}</span>
                     </div>
                   ))}
                 </div>

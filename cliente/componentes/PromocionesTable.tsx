@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Promocion } from "../app/home/promociones/page";
 
 type PromocionesTableProps = {
@@ -12,6 +12,15 @@ const estadoColors: { [key: string]: string } = {
   expirada: 'badge-neutral',
   cancelada: 'badge-error',
 };
+
+// --- Opciones para nuestro nuevo Dropdown ---
+const filterOptions = [
+  { value: "", label: "Todos los estados" },
+  { value: "activa", label: "Activa" },
+  { value: "expirada", label: "Expirada" },
+  { value: "cancelada", label: "Cancelada" },
+];
+
 
 export default function PromocionesTable({ initialData }: PromocionesTableProps) {
   const [promociones] = useState<Promocion[]>(initialData);
@@ -43,6 +52,21 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
     const date = new Date(dateString);
     return date.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
   };
+  
+  // --- Lógica para el Dropdown ---
+  const currentLabel = filterOptions.find(opt => opt.value === estadoFilter)?.label || 'Todos los estados';
+
+  const handleFilterChange = (value: string) => {
+    // Tu lógica original, sin cambios
+    setEstadoFilter(value);
+    setCurrentPage(1);
+
+    // Cierra el dropdown después de seleccionar
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  };
+
 
   return (
     <div className="p-2">
@@ -51,7 +75,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
         <input
           type="search"
           placeholder="Buscar por promoción o establecimiento..."
-          className="input input-bordered input-lg flex-1 !rounded-sm w-full sm:w-full placeholder:text-sm"
+          className="input input-bordered input-m !rounded-sm w-full sm:w-full placeholder:text-sm"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -59,19 +83,32 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
           }}
         />
         
-        <select 
-          className="select select-bordered select-lg !rounded-sm"
-          value={estadoFilter}
-          onChange={(e) => {
-            setEstadoFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-        >
-          <option value="">Todos los estados</option>
-          <option value="activa">Activa</option>
-          <option value="expirada">Expirada</option>
-          <option value="cancelada">Cancelada</option>
-        </select>
+        <div className="dropdown w-full sm:w-auto">
+          <div 
+            tabIndex={0} 
+            role="button" 
+            className="btn btn-bordered w-full justify-between !rounded-sm border-base-300 bg-base-100 text-xs  text-left font-normal text-base-content hover:bg-base-200 hover:border-base-300 sm:w-full"
+          >
+            {currentLabel}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+          <ul 
+            tabIndex={0} 
+            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full mt-2 border border-base-200"
+          >
+            {filterOptions.map((option) => (
+              <li key={option.value}>
+                <a onClick={() => handleFilterChange(option.value)} className="text-xs">
+                  {option.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* ===== FIN DEL DROPDOWN DE DAISYUI ===== */}
+
       </div>
 
       {/* No results message */}
