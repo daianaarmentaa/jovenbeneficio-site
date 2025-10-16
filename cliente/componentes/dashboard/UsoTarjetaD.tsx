@@ -1,3 +1,9 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar una gráfica sobre los usos de la tarjeta digital en los
+ * últimos 7 días.
+ * La función recibe los datos enviados por la API.
+ * Autora: Daiana Andrea Armenta Maya
+*/
 "use client";
 import React from "react";
 import { Activity } from "lucide-react";

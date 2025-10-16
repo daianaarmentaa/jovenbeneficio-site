@@ -1,4 +1,8 @@
-"use client"; // 1. Necesario para usar hooks como usePathname
+/* Esta función se encarga de crear un componente para
+ * mostrar una nav bar en la aplicación.
+ * Autora: Daiana Andrea Armenta Maya
+*/
+"use client";
 
 import { Bell, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";

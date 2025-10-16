@@ -1,3 +1,9 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar la tabla de los jóvenes registrados.
+ * La función recibe los datos enviados por la api.
+ * Autora: Daiana Andrea Armenta Maya
+*/
+
 'use client';
 
 import { useState, useEffect, useRef } from "react";

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet.heat";
-import { useTheme } from "@/app/providers/theme_providers"; // 1. Importa tu hook de tema
+import { useTheme } from "@/app/providers/theme_providers"; 
 
 const datosSimulados = [
   { lat: 19.556, lng: -99.250, cantidad: 15 },

@@ -1,3 +1,8 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar un pie chart en donde se vean los géneros de los jóvenes.
+ * La función recibe los datos enviados por la API.
+ * Autora: Daiana Andrea Armenta Maya
+*/
 "use client";
 import React from "react";
 import { PieChart as PieIcon } from "lucide-react";

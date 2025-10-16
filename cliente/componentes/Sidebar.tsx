@@ -1,9 +1,11 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar una barra de menú lateral que se oculta en pantallas más pequeñas
+ * Autora: Daiana Andrea Armenta Maya
+*/
 'use client';
 
 import React from "react";
 import Link from "next/link";
-// Ya no necesitamos 'Image' de next/image
-// import Image from "next/image"; 
 import { usePathname } from "next/navigation";
 import { Home, Users, Briefcase, Gift, Settings } from "lucide-react";
 

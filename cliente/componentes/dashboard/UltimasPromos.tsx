@@ -1,3 +1,8 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar las últimas 5 promociones que se crearon en una tabla
+ * La función recibe los datos enviados por la API.
+ * Autora: Daiana Andrea Armenta Maya
+*/
 "use client";
 import React from "react";
 import { Tag } from "lucide-react";

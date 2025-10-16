@@ -1,3 +1,7 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar un tabla con las promociones creadas por los negocios
+ * Autora: Daiana Andrea Armenta Maya y Emiliano Plata
+*/
 'use client';
 
 import { useState, useEffect } from "react";

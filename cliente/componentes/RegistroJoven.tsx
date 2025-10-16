@@ -1,3 +1,7 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar un formulario para el registro de los jóvenes
+ * Autora: Daiana Andrea Armenta Maya y Emiliano Plata
+*/
 'use client';
 
 import { useState } from "react";
@@ -76,7 +80,6 @@ export default function RegistroJoven() {
       const files = (e.target as HTMLInputElement).files;
       if (files && files.length > 0) {
         const file = files[0];
-        // ✅ LÍNEA CORREGIDA
         setFormData(prev => ({ ...prev, [name]: file }));
         setPreview(URL.createObjectURL(file));
       }
@@ -120,7 +123,6 @@ export default function RegistroJoven() {
 
   };
 
-    // ... Debajo de tus otros useState
     const [isLoading, setIsLoading] = useState(false);
     const [formError, setFormError] = useState<string | null>(null);
 
@@ -153,7 +155,7 @@ export default function RegistroJoven() {
                 const fotoBase64 = await toBase64(formData.foto);
                 payload.foto = fotoBase64 as any; // Usamos 'any' para evitar problemas de tipo
             } else {
-                delete payload.foto; // No envíes la propiedad si no hay foto
+                delete payload.foto; // No se envía la propiedad si no hay foto
             }
 
             const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/registerJoven';
@@ -173,10 +175,8 @@ export default function RegistroJoven() {
                 throw new Error(result.message || 'Ocurrió un error en el servidor.');
             }
 
-            // ¡Éxito!
             alert('¡Joven registrado con éxito!');
-            // Aquí podrías redirigir al usuario o limpiar el formulario
-            // window.location.href = '/ruta-de-exito';
+
 
         } catch (error: any) {
             console.error("Error al enviar el formulario:", error);
