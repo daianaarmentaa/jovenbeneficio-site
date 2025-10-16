@@ -12,6 +12,7 @@ export default function SeccionPerfil({ user }: { user: any}) {
       <SectionHeader
         title="Perfil de Usuario"
         subtitle="Actualiza tu foto e información personal."
+
       />
       <form className="space-y-6 mt-6">
         <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -21,22 +22,22 @@ export default function SeccionPerfil({ user }: { user: any}) {
             </div>
           </div>
           <div className="w-full sm:flex-1">
-            <input type="file" className="file-input file-input-bordered w-full" />
+            <input type="file" className="file-input file-input-bordered w-full text-base-content" />
             <p className="text-xs text-base-content/70 mt-2">JPG, GIF o PNG. Tamaño máximo de 5MB.</p>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="label"><span className="label-text">Nombre</span></label>
-            <input type="text" defaultValue={user.nickname} className="input input-bordered w-full !rounded" />
+            <label className="label"><span className="label-text text-base-content">Nombre</span></label>
+            <input type="text" defaultValue={user.nickname} className="input input-bordered w-full rounded text-base-content" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Apellidos</span></label>
-            <input type="text" defaultValue={user.given_name} className="input input-bordered w-full !rounded" />
+            <label className="label"><span className="label-text text-base-content">Apellidos</span></label>
+            <input type="text" defaultValue={user.given_name} className=" text-base-content input input-bordered w-full !rounded" />
           </div>
         </div>
         <div>
-          <label className="label"><span className="label-text">Correo Electrónico</span></label>
+          <label className="label"><span className="label-text text-base-content">Correo Electrónico</span></label>
           <input type="email" value={user.email} className="input input-bordered w-full" disabled />
         </div>
         <div className="flex justify-end pt-4">

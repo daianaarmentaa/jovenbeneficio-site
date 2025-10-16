@@ -9,7 +9,7 @@ export default function GeneroUsuarios({ data }: { data: GeneroData[] }) {
   return (
     <div className="card bg-base-100 shadow-lg">
       <div className="card-body">
-        <h2 className="card-title"><PieIcon className="text-neutral" /> Género de Usuarios</h2>
+        <h2 className="text-base-content card-title"><PieIcon className="text-base-content" /> Género de Usuarios</h2>
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
             <Pie data={data} dataKey="total" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5}>

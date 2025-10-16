@@ -24,20 +24,20 @@ export default function JovenesCardView({ jovenes, onDelete }: CardViewProps) {
                 />
               </div>
             </div>
-            <div className="font-bold text-lg">{joven.nombre}</div>
+            <div className="font-bold  text-base-content text-lg">{joven.nombre}</div>
           </div>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="font-semibold text-base-content/70">Folio:</span>
-              <span>{joven.folio}</span>
+              <span className="text-base-content">{joven.folio}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-base-content/70">Correo:</span>
-              <span>{joven.correo}</span>
+              <span className="text-base-content">{joven.correo}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-base-content/70">Teléfono:</span>
-              <span>{joven.telefono}</span>
+              <span className="text-base-content">{joven.telefono}</span>
             </div>
           </div>
           <div className="divider my-2"></div>

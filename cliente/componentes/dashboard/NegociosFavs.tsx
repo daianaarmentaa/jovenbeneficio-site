@@ -12,7 +12,7 @@ export default function NegociosFavoritos({ data }: { data: NegocioFavoritos[] }
     return (
       <div className="card bg-base-100 shadow-lg">
         <div className="card-body">
-          <h2 className="card-title"><Heart className="text-neutral" /> Negocios Favoritos</h2>
+          <h2 className="card-title text-base-content"><Heart className="text-base-content" /> Negocios Favoritos</h2>
           <p className="text-center text-gray-500">No hay datos disponibles</p>
         </div>
       </div>
@@ -21,12 +21,12 @@ export default function NegociosFavoritos({ data }: { data: NegocioFavoritos[] }
   return (
     <div className="card bg-base-100 shadow-lg">
       <div className="card-body">
-        <h2 className="card-title"><Heart className="text-neutral" /> Negocios Favoritos</h2>
+        <h2 className=" text-base-content card-title"><Heart className="text-base-content" /> Negocios Favoritos</h2>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={data} layout="vertical" margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
-            <YAxis dataKey="name" type="category" width={110} interval={0} />
+            <YAxis dataKey="name" type="category" width={70} interval={0} stroke="rgba(156, 156, 156, 1)" />
             <Tooltip cursor={{ fill: "rgba(0,0,0,0.1)" }} />
             <Bar dataKey="favoritos">
               {data.map((_, i) => (

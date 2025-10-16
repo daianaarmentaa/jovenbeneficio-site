@@ -35,7 +35,7 @@ export default function NegociosCardView({ negocios, onDelete }: CardViewProps) 
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-bold text-base leading-tight mb-1">
+                <div className="font-bold text-base-content leading-tight mb-1">
                   {negocio.nombre_establecimiento}
                 </div>
                 <div className="badge badge-primary badge-sm mb-2">
@@ -62,11 +62,11 @@ export default function NegociosCardView({ negocios, onDelete }: CardViewProps) 
               <div className="flex gap-4 text-xs">
                 <div>
                   <span className="text-base-content font-semibold">ID:</span> 
-                  <span className="ml-1 font-semibold">{negocio.id}</span>
+                  <span className="ml-1 font-semibold text-base-content">{negocio.id}</span>
                 </div>
                 <div className="flex-1">
                   <span className="text-base-content">📍</span>
-                  <span className="ml-1">{negocio.colonia}</span>
+                  <span className="text-base-content ml-1">{negocio.colonia}</span>
                 </div>
               </div>
 
@@ -83,7 +83,7 @@ export default function NegociosCardView({ negocios, onDelete }: CardViewProps) 
                           {idx === 0 ? 'Público: ' : 'Privado: '}
                         </span>
                       )}
-                      <span className="text-black">{email}</span>
+                      <span className="text-base-content">{email}</span>
                     </div>
                   ))}
                 </div>
@@ -102,7 +102,7 @@ export default function NegociosCardView({ negocios, onDelete }: CardViewProps) 
                           {idx === 0 ? 'Público: ' : 'Privado: '}
                         </span>
                       )}
-                      <span className="font-medium">{phone}</span>
+                      <span className="font-medium text-base-content">{phone}</span>
                     </div>
                   ))}
                 </div>

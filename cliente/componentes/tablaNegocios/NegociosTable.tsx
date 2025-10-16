@@ -162,7 +162,7 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
         <input
           type="search"
           placeholder="Buscar por nombre, categoría, colonia..."
-          className="input input-bordered input-lg flex-1 !rounded-sm w-full placeholder:text-sm sm:w-full"
+          className="text-base-content input input-bordered input-lg flex-1 !rounded-sm w-full placeholder:text-sm sm:w-full"
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
           disabled={loading}
@@ -176,7 +176,7 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
 
       {loading ? (
         <div className="flex justify-center items-center py-10">
-          <span className="loading loading-spinner loading-lg"></span>
+          <span className=" text-base-content loading loading-spinner loading-lg"></span>
         </div>
       ) : negocios.length === 0 ? (
         <div className="text-center py-8 text-base-content/70">

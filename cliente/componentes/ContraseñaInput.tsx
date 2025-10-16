@@ -23,7 +23,7 @@ export default function PasswordInput({ containerClassName, ...props }: Password
 
   return (
     <label className={finalClassName}>
-      <KeyRound className="w-4 h-4 opacity-70" />
+      <KeyRound className="w-4 h-4 opacity-70 text-base-content" />
       
       <input
         {...props}
@@ -37,9 +37,9 @@ export default function PasswordInput({ containerClassName, ...props }: Password
         className="btn btn-ghost btn-sm btn-circle"
       >
         {showPassword ? (
-          <EyeOff className="w-4 h-4 opacity-70" />
+          <EyeOff className="w-4 h-4 opacity-70 text-base-content" />
         ) : (
-          <Eye className="w-4 h-4 opacity-70" />
+          <Eye className="w-4 h-4 opacity-70 text-base-content" />
         )}
       </button>
     </label>

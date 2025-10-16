@@ -34,10 +34,10 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
       <div
         className={`
-          h-screen w-60 bg-base-100 text-black flex flex-col
+          h-screen w-60 bg-base-100 text-base-content flex flex-col
           fixed top-0 left-0 z-40 transform transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          md:relative md:translate-x-0 border-r border-gray-200
+          md:relative md:translate-x-0 border-r border-base-300
         `}
       >
         <div className="hidden md:flex items-center px-4 h-16">
@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           </div>
         </div>
         
-        <ul className="menu bg-transparent text-sm flex-col gap-2 flex-grow px-4 mt-4">
+        <ul className="menu bg-transparent text-base-content text-sm flex-col gap-2 flex-grow px-4 mt-4">
           {menuItems.map(({ href, label, icon: Icon, mtAuto }) => (
             <li key={href} className={mtAuto ? "mt-auto" : ""}>
               <Link
@@ -56,10 +56,10 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 className="flex items-center gap-2 p-2 rounded group"
               >
                 <Icon
-                  className={`h-5 w-5 ${pathname === href ? "text-rose-300" : "text-black group-hover:text-rose-300"}`}
+                  className={`h-5 w-5 ${pathname === href ? "text-rose-300" : "text-base-content group-hover:text-rose-300"}`}
                 />
                 <span
-                  className={`${pathname === href ? "text-rose-300" : "text-black group-hover:text-rose-300"}`}
+                  className={`${pathname === href ? "text-rose-300" : "text-base-content group-hover:text-rose-300"}`}
                 >
                   {label}
                 </span>

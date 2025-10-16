@@ -75,7 +75,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
         <input
           type="search"
           placeholder="Buscar por promoción o establecimiento..."
-          className="input input-bordered input-m !rounded-sm w-full sm:w-full placeholder:text-sm"
+          className="input input-bordered input-m !rounded-sm w-full sm:w-full placeholder:text-sm text-base-content"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -96,7 +96,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
           </div>
           <ul 
             tabIndex={0} 
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full mt-2 border border-base-200"
+            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full mt-2 border border-base-200 text-base-content"
           >
             {filterOptions.map((option) => (
               <li key={option.value}>
@@ -107,7 +107,6 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
             ))}
           </ul>
         </div>
-        {/* ===== FIN DEL DROPDOWN DE DAISYUI ===== */}
 
       </div>
 
@@ -120,7 +119,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
 
       {/* Desktop Table View */}
       <div className="overflow-x-auto hidden md:block">
-        <table className="table w-full border border-base-300">
+        <table className="table w-full border border-base-300 text-base-content">
           <thead className="bg-base-200">
             <tr>
               <th>ID</th>
@@ -155,7 +154,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
         {paginated.map((promo) => (
           <div key={promo.id} className="card bg-base-100 shadow-lg p-4">
             <div className="flex justify-between items-center mb-4">
-              <div className="font-bold text-lg">{promo.nombre_promocion}</div>
+              <div className=" text-base-content font-bold text-lg">{promo.nombre_promocion}</div>
               <span className={`badge ${estadoColors[promo.estado]}`}>
                 {promo.estado}
               </span>
@@ -163,19 +162,19 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="font-semibold text-base-content/70">ID:</span>
-                <span>{promo.id}</span>
+                <span className="text-base-content">{promo.id}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-semibold text-base-content/70">Establecimiento:</span>
-                <span>{promo.nombre_establecimiento}</span>
+                <span className="text-base-content">{promo.nombre_establecimiento}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-semibold text-base-content/70">Creación:</span>
-                <span>{formatDate(promo.fecha_creacion)}</span>
+                <span className="text-base-content">{formatDate(promo.fecha_creacion)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-semibold text-base-content/70">Expiración:</span>
-                <span>{formatDate(promo.fecha_expiracion)}</span>
+                <span className="text-base-content">{formatDate(promo.fecha_expiracion)}</span>
               </div>
             </div>
           </div>
@@ -192,7 +191,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
           >
             Anterior
           </button>
-          <span>Página {currentPage} de {totalPages}</span>
+          <span className="text-base-content">Página {currentPage} de {totalPages}</span>
           <button 
             className="btn btn-sm btn-primary rounded" 
             onClick={handleNext} 

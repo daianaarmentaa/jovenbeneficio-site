@@ -205,7 +205,7 @@ export default function RegistrarNegocio() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full bg-base-100 shadow-lg rounded-xl p-6 sm:p-10 space-y-8"
+      className="w-full bg-base-100 shadow-lg rounded-xl p-6 sm:p-10 space-y-8 text-base-content"
     >
       {/* Encabezado */}
       <div className="border-b border-base-300 pb-6">
@@ -223,7 +223,7 @@ export default function RegistrarNegocio() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="sm:col-span-2">
             <label className="label">
-              <span className="label-text">Nombre del negocio</span>
+              <span className="label-text text-base-content">Nombre del negocio</span>
             </label>
             <input 
               type="text" 
@@ -238,7 +238,7 @@ export default function RegistrarNegocio() {
 
           <div>
             <label className="label">
-              <span className="label-text">ID del Admin que registra</span>
+              <span className="label-text text-base-content">ID del Admin que registra</span>
             </label>
             <input 
               type="number" 
@@ -270,7 +270,7 @@ export default function RegistrarNegocio() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label className="label">
-              <span className="label-text">Nombre</span>
+              <span className="label-text text-base-content">Nombre</span>
             </label>
             <input 
               type="text" 
@@ -284,7 +284,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Apellido Paterno</span>
             </label>
             <input 
@@ -300,7 +300,7 @@ export default function RegistrarNegocio() {
 
           <div>
             <label className="label">
-              <span className="label-text">Apellido Materno (Opcional)</span>
+              <span className="label-text text-base-content">Apellido Materno (Opcional)</span>
             </label>
             <input 
               type="text" 
@@ -313,7 +313,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Correo del Contacto</span>
             </label>
             <input 
@@ -329,7 +329,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Teléfono del Contacto</span>
             </label>
             <input 
@@ -346,7 +346,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Contraseña</span>
             </label>
             <input 
@@ -371,7 +371,7 @@ export default function RegistrarNegocio() {
         <p className="text-sm text-base-content/70">Esta información será visible para los clientes.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Correo Público</span>
             </label>
             <input 
@@ -386,7 +386,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Teléfono Público</span>
             </label>
             <input 
@@ -410,7 +410,7 @@ export default function RegistrarNegocio() {
         <h2 className="text-xl font-semibold text-base-content">Dirección del Negocio</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="sm:col-span-2 lg:col-span-3">
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Calle</span>
             </label>
             <input 
@@ -424,7 +424,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Número exterior</span>
             </label>
             <input 
@@ -438,7 +438,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Número interior (Opcional)</span>
             </label>
             <input 
@@ -451,7 +451,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div>
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Código Postal</span>
             </label>
             <input 
@@ -465,7 +465,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div className="sm:col-span-2 lg:col-span-3">
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Colonia</span>
             </label>
             <input 
@@ -479,7 +479,7 @@ export default function RegistrarNegocio() {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="label">
+            <label className="label text-base-content">
               <span className="label-text">Municipio</span>
             </label>
             <input 

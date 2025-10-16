@@ -27,10 +27,10 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
     <div className="navbar bg-base-200 px-4 border-b border-base-300">
       <div className="flex-1">
         <button onClick={toggleSidebar} className="btn btn-ghost btn-circle md:hidden">
-          <Menu className="w-5 h-5" />
+          <Menu className="w-5 h-5 text-base-content" />
         </button>
         
-        <span className="text-xl font-semibold ml-2">{title}</span>
+        <span className="text-xl text-base-content font-semibold ml-2">{title}</span>
       </div>
 
       <div className="flex-none">
@@ -38,7 +38,7 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
             <div className="indicator">
-              <Bell className="w-5 h-5"></Bell>
+              <Bell className="w-5 h-5 text-base-content"></Bell>
               <span className="badge badge-xs badge-primary indicator-item"></span>
             </div>
           </div>
@@ -55,13 +55,13 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-            <li>
+            <li className="text-base-content">
               <Link href="/home/ajustes">
                 Perfil
               </Link>
             </li>
             <li>
-              <a href="/auth/logout" className="btn-sm btn-ghost text-black">
+              <a href="/auth/logout" className="btn-sm btn-ghost text-base-content">
                 Cerrar Sesión
               </a>
             </li>

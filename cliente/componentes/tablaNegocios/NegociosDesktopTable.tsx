@@ -9,7 +9,7 @@ type TableViewProps = {
 export default function NegociosDesktopTable({ negocios, onDelete }: TableViewProps) {
   return (
     <div className="overflow-x-auto hidden md:block">
-      <table className="table w-full border border-base-300">
+      <table className="table w-full border border-base-300 text-base-content">
         <thead className="bg-base-200">
           <tr>
             <th>Logo</th>

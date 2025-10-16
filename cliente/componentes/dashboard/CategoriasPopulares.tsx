@@ -21,12 +21,12 @@ export default function CategoriasPopulares({ data }: { data: Categoria[] }) {
   return (
     <div className="card lg:col-span-2 bg-base-100 shadow-lg">
       <div className="card-body">
-        <h2 className="card-title"><Activity className="text-neutral" /> Categorías Populares</h2>
+        <h2 className=" text-base-content card-title"><Activity className="text-base-content" /> Categorías Populares</h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data} layout="vertical">
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
-            <YAxis dataKey="name" type="category" width={110} interval={0} />
+            <YAxis dataKey="name" type="category" width={120} interval={0} stroke="rgba(156, 156, 156, 1)" />
             <Tooltip cursor={{ fill: "rgba(0,0,0,0.1)" }} />
             <Bar dataKey="popularidad">
               {data.map((_, i) => (

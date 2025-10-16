@@ -56,7 +56,7 @@ export default function CategoriaSelector({
   if (loading) {
     return (
       <div>
-        <label className="label">
+        <label className="label text-base-content">
           <span className="label-text">Categoría del negocio</span>
         </label>
         <select className="select select-bordered w-full !rounded" disabled>
@@ -69,7 +69,7 @@ export default function CategoriaSelector({
   if (error) {
     return (
       <div>
-        <label className="label">
+        <label className="label text-base-content">
           <span className="label-text">Categoría del negocio</span>
         </label>
         <div className="alert alert-error">
@@ -81,7 +81,7 @@ export default function CategoriaSelector({
 
   return (
     <div>
-      <label className="label">
+      <label className="label text-base-content">
         <span className="label-text">Categoría del negocio</span>
       </label>
       <select 

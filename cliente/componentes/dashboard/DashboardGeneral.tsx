@@ -32,10 +32,10 @@ export default function DashboardGeneral({ user }: { user: any }) {
   }, []);
 
   
-  if (loading) return <p>Cargando...</p>;
-  if (!datos) return <p>No se pudieron cargar los datos.</p>;
+  if (loading) return <p className="text-base-content">Cargando...</p>;
+  if (!datos) return <p className="text-error">No se pudieron cargar los datos.</p>;
   return (
-    <main className="p-4 sm:p-6 lg:p-8 bg-base-200 min-h-screen">
+    <main className="p-4 sm:p-6 lg:p-4 bg-base-200 min-h-screen text-base-300">
       <h1 className="text-3xl font-semibold text-base-content mb-6">
         Hola! {user.name}
       </h1>

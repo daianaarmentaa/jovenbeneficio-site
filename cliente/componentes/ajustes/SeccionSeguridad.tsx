@@ -12,32 +12,32 @@ export default function SeccionSeguridad() {
     
         <div>
           <label className="label">
-            <span className="label-text">Contraseña Actual</span>
+            <span className="label-text text-base-content">Contraseña Actual</span>
           </label>
           <input 
             type="password" 
             placeholder="••••••••••••" 
-            className="input input-bordered w-full !rounded" 
+            className="input input-bordered w-full rounded text-base-content" 
           />
         </div>
 
         <div>
           <label className="label">
-            <span className="label-text">Nueva Contraseña</span>
+            <span className="label-text text-base-content">Nueva Contraseña</span>
           </label>
           <PasswordInput 
             placeholder="••••••••••••" 
-            containerClassName="w-full"
+            containerClassName="w-full text-base-content"
           />
         </div>
         
         <div>
           <label className="label">
-            <span className="label-text">Confirmar Contraseña</span>
+            <span className="label-text text-base-content">Confirmar Contraseña</span>
           </label>
           <PasswordInput 
             placeholder="••••••••••••" 
-            containerClassName="w-full"
+            containerClassName="w-full text-base-content"
           />
         </div>
         

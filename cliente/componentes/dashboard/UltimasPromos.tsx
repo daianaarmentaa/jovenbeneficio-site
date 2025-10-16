@@ -8,9 +8,9 @@ export default function UltimasPromociones({ data }: { data: Promocion[] }) {
   return (
     <div className="card lg:col-span-2 bg-base-100 shadow-lg">
       <div className="card-body">
-        <h2 className="card-title"><Tag className="text-neutral" /> Últimas Promociones</h2>
+        <h2 className=" text-base-content card-title"><Tag className="text-base-content" /> Últimas Promociones</h2>
         <div className="overflow-x-auto h-64">
-          <table className="table table-sm">
+          <table className="table table-sm text-base-content">
             <thead>
               <tr>
                 <th>Promoción</th>

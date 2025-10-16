@@ -15,7 +15,7 @@ export default function Pagination({ currentPage, totalPages, onPrev, onNext }: 
       >
         Anterior
       </button>
-      <span>
+      <span className="text-base-content">
         Página {currentPage} de {totalPages}
       </span>
       <button 

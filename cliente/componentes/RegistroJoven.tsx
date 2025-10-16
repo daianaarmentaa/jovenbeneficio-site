@@ -189,7 +189,7 @@ export default function RegistroJoven() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full bg-base-100 shadow-lg rounded-xl p-6 sm:p-10 space-y-8"
+      className="w-full bg-base-100 shadow-lg rounded-xl p-6 sm:p-10 space-y-8 text-base-content"
     >
       <div className="border-b border-base-300 pb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-base-content">
@@ -205,23 +205,23 @@ export default function RegistroJoven() {
         <h2 className="text-xl font-semibold text-base-content">Datos Personales</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="label"><span className="label-text">Nombre(s)</span></label>
+            <label className="label text-base-content"><span className="label-text">Nombre(s)</span></label>
             <input type="text" name="nombre" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Apellido Paterno</span></label>
+            <label className="label text-base-content"><span className="label-text">Apellido Paterno</span></label>
             <input type="text" name="apellidoPaterno" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Apellido Materno</span></label>
+            <label className="label text-base-content"><span className="label-text">Apellido Materno</span></label>
             <input type="text" name="apellidoMaterno" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Fecha de nacimiento</span></label>
+            <label className="label text-base-content"><span className="label-text">Fecha de nacimiento</span></label>
             <input type="date" name="fechaNacimiento" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">CURP</span></label>
+            <label className="label text-base-content"><span className="label-text">CURP</span></label>
             <input type="text" 
                    name="curp" 
                    onChange={handleChange} 
@@ -232,7 +232,7 @@ export default function RegistroJoven() {
                    {errors.curp && <span className="text-error text-xs mt-1">{errors.curp}</span>}
           </div>
           <div>
-            <label className="label"><span className="label-text">Género</span></label>
+            <label className="label text-base-content"><span className="label-text">Género</span></label>
               <select name="genero" onChange={handleChange} value={formData.genero} required className="select select-bordered w-full !rounded">
                 <option disabled value="">Selecciona una opción</option>
                 <option value="M">Masculino</option>
@@ -254,27 +254,27 @@ export default function RegistroJoven() {
             <input type="text" name="direccion.calle" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Número Exterior</span></label>
+            <label className="label text-base-content"><span className="label-text">Número Exterior</span></label>
             <input type="text" name="direccion.numeroExterior" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Número Interior (Opcional)</span></label>
+            <label className="label text-base-content"><span className="label-text">Número Interior (Opcional)</span></label>
             <input type="text" name="direccion.numeroInterior" onChange={handleChange} className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Código Postal</span></label>
+            <label className="label text-base-content"><span className="label-text">Código Postal</span></label>
             <input type="text" name="direccion.codigoPostal" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div className="sm:col-span-2 lg:col-span-3">
-            <label className="label"><span className="label-text">Colonia</span></label>
+            <label className="label text-base-content"><span className="label-text">Colonia</span></label>
             <input type="text" name="direccion.colonia" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Municipio / Alcaldía</span></label>
+            <label className="label text-base-content"><span className="label-text">Municipio / Alcaldía</span></label>
             <input type="text" name="direccion.municipio" onChange={handleChange} required className="input input-bordered w-full !rounded" />
           </div>
           <div>
-            <label className="label"><span className="label-text">Estado</span></label>
+            <label className="label text-base-content"><span className="label-text">Estado</span></label>
             <input 
               type="text" 
               name="direccion.estado" 
@@ -294,18 +294,18 @@ export default function RegistroJoven() {
         <h2 className="text-xl font-semibold text-base-content">Datos de la Cuenta</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="label"><span className="label-text">Correo</span></label>
+            <label className="label text-base-content"><span className="label-text">Correo</span></label>
             <input type="email" name="correo" onChange={handleChange} placeholder="correo@ejemplo.com" required className={`input input-bordered w-full !rounded ${errors.correo ? "input-error" : "" }`} />
             {errors.correo && <span className="text-error text-xs mt-1">{errors.correo}</span>}
           </div>
           <div>
-            <label className="label"><span className="label-text">Celular</span></label>
+            <label className="label text-base-content"><span className="label-text">Celular</span></label>
             <input type="tel" name="celular" onChange={handleChange} placeholder="10 dígitos" required className={`input input-bordered w-full !rounded ${errors.celular ? "input-error" : "" }`} />
             {errors.celular && <span className="text-error text-xs mt-1">{errors.celular}</span>}
           </div>
         </div>
         <div>
-          <label className="label"><span className="label-text">Contraseña</span></label>
+          <label className="label text-base-content"><span className="label-text">Contraseña</span></label>
           <input type="password" name="password" onChange={handleChange} required className={`input input-bordered w-full !rounded ${errors.password ? "input-error" : "" }`} />
           {errors.password && <span className="text-error text-xs mt-1">{errors.password}</span>}
         </div>

@@ -165,7 +165,7 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
         <input
           type="search"
           placeholder="Buscar por nombre o folio..."
-          className="input input-bordered input-lg flex-1 !rounded-sm w-full placeholder:text-sm sm:w-full"
+          className="input input-bordered input-lg flex-1 rounded w-full placeholder:text-sm sm:w-full text-base-content"
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
           disabled={loading}
@@ -179,7 +179,7 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
 
       {loading ? (
         <div className="flex justify-center items-center py-10">
-          <span className="loading loading-spinner loading-lg"></span>
+          <span className="text-base-content loading loading-spinner loading-lg"></span>
         </div>
       ) : (
         <>
