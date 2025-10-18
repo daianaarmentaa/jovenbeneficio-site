@@ -82,11 +82,11 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      console.log('📊 Initial render with', initialData.length, 'negocios');
+      console.log('Initial render with', initialData.length, 'negocios');
       return;
     }
     
-    console.log('🔄 Fetching page:', currentPage);
+    console.log('Fetching page:', currentPage);
     fetchNegocios(currentPage, search);
   }, [currentPage]);
 
@@ -101,9 +101,8 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
     if (!negocioToDelete) return;
     
     try {
-      console.log(`🗑️ Deleting negocio with ID: ${negocioToDelete.id}`);
+      console.log(`Deleting negocio with ID: ${negocioToDelete.id}`);
       
-      // ✅ CALL THE DELETE API ENDPOINT
       const response = await fetch(
         `${DELETE_API_URL}/${negocioToDelete.id}`, 
         { 
@@ -120,24 +119,24 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
       }
       
       const result = await response.json();
-      console.log('✅ Delete successful:', result);
+      console.log('Delete successful:', result);
       
       // Calculate if we need to go to previous page
       const isLastItemOnPage = negocios.length === 1;
       const shouldGoToPreviousPage = isLastItemOnPage && currentPage > 1;
       
       if (shouldGoToPreviousPage) {
-        console.log('📄 Going to previous page after delete');
+        console.log('Going to previous page after delete');
         setCurrentPage(currentPage - 1);
         await fetchNegocios(currentPage - 1, search);
       } else {
-        console.log('🔄 Refreshing current page after delete');
+        console.log('Refreshing current page after delete');
         await fetchNegocios(currentPage, search);
       }
       
       alert(`Establecimiento "${negocioToDelete.nombre_establecimiento}" eliminado con éxito.`);
     } catch (error) {
-      console.error('❌ Delete error:', error);
+      console.error('Delete error:', error);
       alert(error instanceof Error ? error.message : "No se pudo eliminar el establecimiento.");
     } finally {
       setNegocioToDelete(null);

@@ -88,11 +88,11 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      console.log('📊 Initial render with', initialData.length, 'jóvenes');
+      console.log('Initial render with', initialData.length, 'jóvenes');
       return;
     }
     
-    console.log('🔄 Fetching page:', currentPage);
+    console.log('Fetching page:', currentPage);
     fetchJovenes(currentPage, search);
   }, [currentPage]);
 
@@ -107,9 +107,8 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
     if (!jovenToDelete) return;
     
     try {
-      console.log(`🗑️ Deleting joven with ID: ${jovenToDelete.id}`);
+      console.log(`Deleting joven with ID: ${jovenToDelete.id}`);
       
-      // ✅ USE THE CORRECT DELETE ENDPOINT
       const response = await fetch(
         `${DELETE_API_URL}/${jovenToDelete.id}`, 
         { 
@@ -126,7 +125,7 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
       }
       
       const result = await response.json();
-      console.log('✅ Delete successful:', result);
+      console.log('Delete successful:', result);
       
       // Calculate if we need to go to previous page
       // If we're deleting the last item on the current page and we're not on page 1
@@ -135,18 +134,18 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
       
       if (shouldGoToPreviousPage) {
         // Go to previous page
-        console.log('📄 Going to previous page after delete');
+        console.log('Going to previous page after delete');
         setCurrentPage(currentPage - 1);
         await fetchJovenes(currentPage - 1, search);
       } else {
         // Refresh the current page
-        console.log('🔄 Refreshing current page after delete');
+        console.log('Refreshing current page after delete');
         await fetchJovenes(currentPage, search);
       }
       
       alert(`Joven "${jovenToDelete.nombre}" eliminado con éxito.`);
     } catch (error) {
-      console.error('❌ Delete error:', error);
+      console.error('Delete error:', error);
       alert(error instanceof Error ? error.message : "No se pudo eliminar el registro.");
     } finally {
       setJovenToDelete(null);

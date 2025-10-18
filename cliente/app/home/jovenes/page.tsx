@@ -1,5 +1,6 @@
 import JovenesTable from "@/componentes/tablaJovenes/JovenesTable";
 
+//Los datos que se van a mostrar del joven
 export type Joven = {
   id: number;
   nombre: string;
@@ -9,6 +10,8 @@ export type Joven = {
   foto: string;
 };
 
+
+// Datos de la api que va a recibir 
 type ApiResponse = {
   data: Joven[];
   pagination: {
@@ -21,6 +24,7 @@ type ApiResponse = {
   };
 };
 
+//funcion para poder jalar los datos de la api
 async function getJovenesData() {
   try {
     const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenes?page=1&limit=5&orderBy=id&orderDir=ASC";
@@ -39,8 +43,6 @@ async function getJovenesData() {
     
     const apiResponse: ApiResponse = await res.json();
     
-    // ✅ Lambda now returns complete presigned URLs, so NO transformation needed
-    // Just use the data as-is
     return {
       data: apiResponse.data,
       pagination: apiResponse.pagination,
@@ -52,6 +54,8 @@ async function getJovenesData() {
   }
 }
 
+
+//Funcion principal que llama a una funcion
 export default async function JovenesPage() {
   const { data, pagination } = await getJovenesData();
 

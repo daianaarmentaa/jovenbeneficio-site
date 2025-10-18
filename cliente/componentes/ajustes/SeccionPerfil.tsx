@@ -1,5 +1,5 @@
 "use client";
-import SectionHeader from "./SectionHeader"; // Asumiendo que creaste el componente compartido
+import SectionHeader from "./SectionHeader";
 
 
 export default function SeccionPerfil({ user }: { user: any}) {
