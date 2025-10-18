@@ -43,7 +43,7 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
         limit: pageSize.toString(),
         orderBy: 'id',
         orderDir: 'ASC',
-        view_model: 'admin'
+        view_mode: 'admin'
       });
 
       if (searchQuery) {
