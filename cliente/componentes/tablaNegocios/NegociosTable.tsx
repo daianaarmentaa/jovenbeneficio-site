@@ -42,7 +42,8 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
         page: page.toString(),
         limit: pageSize.toString(),
         orderBy: 'id',
-        orderDir: 'ASC'
+        orderDir: 'ASC',
+        view_model: 'admin'
       });
 
       if (searchQuery) {
@@ -101,10 +102,10 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
     if (!negocioToDelete) return;
     
     try {
-      console.log(`Deleting negocio with ID: ${negocioToDelete.id}`);
+      console.log(`Deleting negocio with ID: ${negocioToDelete.id_establecimiento}`);
       
       const response = await fetch(
-        `${DELETE_API_URL}/${negocioToDelete.id}`, 
+        `${DELETE_API_URL}/${negocioToDelete.id_establecimiento}`, 
         { 
           method: 'DELETE',
           headers: {
@@ -134,7 +135,7 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
         await fetchNegocios(currentPage, search);
       }
       
-      alert(`Establecimiento "${negocioToDelete.nombre_establecimiento}" eliminado con éxito.`);
+      alert(`Establecimiento "${negocioToDelete.nombre}" eliminado con éxito.`);
     } catch (error) {
       console.error('Delete error:', error);
       alert(error instanceof Error ? error.message : "No se pudo eliminar el establecimiento.");
@@ -208,7 +209,7 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
       
       <DeleteConfirmationModal
         isOpen={!!negocioToDelete}
-        itemName={negocioToDelete?.nombre_establecimiento || ''}
+        itemName={negocioToDelete?.nombre || ''}
         onClose={() => setNegocioToDelete(null)}
         onConfirm={handleDelete}
       />

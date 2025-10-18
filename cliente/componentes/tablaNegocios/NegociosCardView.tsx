@@ -16,30 +16,30 @@ export default function NegociosCardView({ negocios, onDelete }: CardViewProps) 
   return (
     <div className="md:hidden flex flex-col gap-4">
       {negocios.map((negocio) => {
-        const emails = splitContact(negocio.correo);
-        const phones = splitContact(negocio.telefono);
+        const emails = splitContact(negocio.correos);
+        const phones = splitContact(negocio.telefonos);
         
         return (
-          <div key={negocio.id} className="card bg-base-100 shadow-lg p-4">
+          <div key={negocio.id_establecimiento} className="card bg-base-100 shadow-lg p-4">
             {/* Header with avatar and name */}
             <div className="flex items-start gap-4 mb-4">
               <div className="avatar">
                 <div className="w-14 h-14 rounded-full">
                   <img 
                     src={negocio.foto} 
-                    alt={negocio.nombre_establecimiento}
+                    alt={negocio.nombre}
                     onError={(e) => {
-                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(negocio.nombre_establecimiento)}&background=random`;
+                      e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(negocio.nombre)}&background=random`;
                     }}
                   />
                 </div>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-base-content leading-tight mb-1">
-                  {negocio.nombre_establecimiento}
+                  {negocio.nombre}
                 </div>
                 <div className="badge badge-primary badge-sm mb-2">
-                  {negocio.categoria}
+                  {negocio.nombre_categoria}
                 </div>
                 {negocio.nombre_contacto_completo && (
                   <div className="text-xs text-base-content/70">
@@ -62,7 +62,7 @@ export default function NegociosCardView({ negocios, onDelete }: CardViewProps) 
               <div className="flex gap-4 text-xs">
                 <div>
                   <span className="text-base-content font-semibold">ID:</span> 
-                  <span className="ml-1 font-semibold text-base-content">{negocio.id}</span>
+                  <span className="ml-1 font-semibold text-base-content">{negocio.id_establecimiento}</span>
                 </div>
                 <div className="flex-1">
                   <span className="text-base-content">📍</span>
