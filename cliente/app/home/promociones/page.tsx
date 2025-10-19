@@ -3,7 +3,7 @@ import PromocionesTable from "@/componentes/PromocionesTable";
 // Updated type to match API response
 export type Promocion = {
   id: number;
-  nombre_promocion: string;
+  titulo_promocion: string;
   nombre_establecimiento: string;
   fecha_creacion: string;
   fecha_expiracion: string;
