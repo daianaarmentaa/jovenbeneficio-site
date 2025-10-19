@@ -6,13 +6,11 @@ export type Negocio = {
   nombre: string;
   foto: string;
   colonia: string;
-  latitud: number | null;
-  longitud: number | null;
   id_categoria: number;
   nombre_categoria: string;
   nombre_contacto_completo: string;
-  correos: string;  // Antes 'correo'
-  telefonos: string; // Antes 'telefono'
+  correos: string;  
+  telefonos: string; 
 };
 
 // API Response type
