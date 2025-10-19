@@ -90,7 +90,7 @@ export default function RegistrarNegocio() {
 
     // Validación en tiempo real
     if (name === "correoContacto" || name === "correoPublico") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       setErrors((prev) => ({ 
         ...prev, 
         [name]: emailRegex.test(value) ? "" : "Correo inválido" 
@@ -101,7 +101,7 @@ export default function RegistrarNegocio() {
       const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
       setErrors((prev) => ({ 
         ...prev, 
-        password: passRegex.test(value) ? "" : "Mínimo 8 caracteres, una letra y un número" 
+        password: passRegex.test(value) ? "" : "Mínimo 8 caracteres, una letra, un número y un caracter especial" 
       }));
     }
 

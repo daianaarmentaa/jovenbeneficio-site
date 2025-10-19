@@ -85,17 +85,25 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
       console.log('📊 Initial render with', initialData.length, 'jóvenes');
       return;
     }
-    
-    console.log('🔄 Fetching page:', currentPage);
     fetchJovenes(currentPage, search);
   }, [currentPage]);
 
-  // Fetch when search changes
-  const handleSearchChange = (newSearch: string) => {
-    setSearch(newSearch);
-    setCurrentPage(1);
-    fetchJovenes(1, newSearch);
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log(`Debounced search for: "${search}"`);
+      setCurrentPage(1); 
+      fetchJovenes(1, search);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
+
+
+const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setSearch(e.target.value);
+};
 
   const handleDelete = async () => {
     if (!jovenToDelete) return;
@@ -167,7 +175,7 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
           placeholder="Buscar por nombre o folio..."
           className="input input-bordered input-lg flex-1 rounded w-full placeholder:text-sm sm:w-full text-base-content"
           value={search}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={handleSearchChange}
           disabled={loading}
         />
         <Link href="/home/jovenes/registrarJoven">

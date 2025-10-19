@@ -90,12 +90,22 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
     fetchNegocios(currentPage, search);
   }, [currentPage]);
 
-  // Fetch when search changes
-  const handleSearchChange = (newSearch: string) => {
-    setSearch(newSearch);
-    setCurrentPage(1);
-    fetchNegocios(1, newSearch);
-  };
+    useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log(`Debounced search for: "${search}"`);
+      setCurrentPage(1); 
+      fetchNegocios(1, search);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
+
+
+const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setSearch(e.target.value);
+};
 
   const handleDelete = async () => {
     if (!negocioToDelete) return;
@@ -103,7 +113,6 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
     try {
       console.log(`🗑️ Deleting negocio with ID: ${negocioToDelete.id}`);
       
-      // ✅ CALL THE DELETE API ENDPOINT
       const response = await fetch(
         `${DELETE_API_URL}/${negocioToDelete.id}`, 
         { 
@@ -164,7 +173,7 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
           placeholder="Buscar por nombre, categoría, colonia..."
           className="text-base-content input input-bordered input-lg flex-1 !rounded-sm w-full placeholder:text-sm sm:w-full"
           value={search}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={handleSearchChange}
           disabled={loading}
         />
         <Link href="/home/negocios/registrarNegocio">
