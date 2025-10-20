@@ -8,7 +8,7 @@ import React from "react";
 import { PieChart as PieIcon } from "lucide-react";
 import { ResponsiveContainer, PieChart, Pie, Tooltip, Cell, Legend } from "recharts";
 
-type GeneroData = { name: string; total: number };
+type GeneroData = { name: string };
 
 export default function GeneroUsuarios({ data }: { data: GeneroData[] }) {
   return (
@@ -17,7 +17,7 @@ export default function GeneroUsuarios({ data }: { data: GeneroData[] }) {
         <h2 className="text-base-content card-title"><PieIcon className="text-base-content" /> Género de Usuarios</h2>
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
-            <Pie data={data} dataKey="total" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5}>
+            <Pie data={data} dataKey="total" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} strokeWidth={0}>
               <Cell fill="#C079FF" />
               <Cell fill="#9605f7" />
               <Cell fill="#D8B0FF" />

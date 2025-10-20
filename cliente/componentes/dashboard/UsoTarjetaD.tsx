@@ -16,7 +16,7 @@ export default function UsoTarjetaDigital({ data }: { data: UsoTarjetaData[] }) 
     return (
       <div className="card lg:col-span-4 bg-base-100 shadow-lg">
         <div className="card-body">
-          <h2 className="card-title text-base-content"><Activity className="text-base-content" /> Uso de Tarjeta Digital (Últ. 7 días)</h2>
+          <h2 className="card-title text-base-content"><Activity className="text-base-content" /> Uso de Tarjeta Digital (Último mes.)</h2>
           <p className="text-center text-gray-500">No hay datos disponibles</p>
         </div>
       </div>
@@ -26,7 +26,7 @@ export default function UsoTarjetaDigital({ data }: { data: UsoTarjetaData[] }) 
   return (
     <div className="card lg:col-span-4 bg-base-100 shadow-lg">
       <div className="card-body">
-        <h2 className="card-title text-base-content"><Activity className="text-base-content" /> Uso de Tarjeta Digital (Últ. 7 días)</h2>
+        <h2 className="card-title text-base-content"><Activity className="text-base-content" /> Uso de Tarjeta Digital (Último mes.)</h2>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" />

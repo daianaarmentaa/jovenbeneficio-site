@@ -14,7 +14,7 @@ import GeneroUsuarios from "./GeneroUsuarios";
 import NegociosFavoritos from "./NegociosFavs";
 import UltimasPromociones from "./UltimasPromos";
 import UsoTarjetaDigital from "./UsoTarjetaD";
-import MapaJovenes from "./MapaClient";
+import MapaDinamico from "./MapaClient";
 
 
 export default function DashboardGeneral({ user }: { user: any }) {
@@ -54,7 +54,7 @@ export default function DashboardGeneral({ user }: { user: any }) {
         <NegociosFavoritos data={datos.topFavoritos} />
         <UltimasPromociones data={datos.promociones} />
         <UsoTarjetaDigital data={datos.usoTarjeta} />
-        <MapaJovenes />
+        <MapaDinamico />
       </div>
     </main>
   );
