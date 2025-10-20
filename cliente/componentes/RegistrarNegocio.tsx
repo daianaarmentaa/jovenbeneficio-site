@@ -172,20 +172,10 @@ const [formError, setFormError] = useState<string | null>(null);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
-    const hasClientErros = Object.values(errors).some(errorMsg => errorMsg !== "");
-
-    if (hasClientErros){
-      setFormError("Por favor, corrige los errores marcados en rojo antes de continuar");
-      return;
-    }
+    
     // Validaciones
     if (!formData.categoria) {
       setFormError("Por favor, selecciona una categoría para el negocio.");
-      return;
-    }
-
-    if (Object.values(errors).some(error => error !== "")) {
-      setFormError("Por favor, corrige los errores en el formulario.");
       return;
     }
 
