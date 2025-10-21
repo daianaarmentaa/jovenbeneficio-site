@@ -27,7 +27,7 @@ type ApiResponse = {
 //funcion para poder jalar los datos de la api
 async function getJovenesData() {
   try {
-    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenes?page=1&limit=5&orderBy=id&orderDir=ASC";
+    const API_URL = "https://listar-joven-819994103285.us-central1.run.app";
     
     const res = await fetch(API_URL, {
       cache: 'no-store',
