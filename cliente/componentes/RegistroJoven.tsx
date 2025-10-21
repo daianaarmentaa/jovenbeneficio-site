@@ -31,6 +31,8 @@ type JovenFormData = {
   foto?: File | null; // <-- LA CLAVE ES EL '?'
 };
 
+
+
 export default function RegistroJoven() {
   // --- PASO 2: APLICA EL TIPO A TU ESTADO ---
   const [formData, setFormData] = useState<JovenFormData>({
@@ -64,6 +66,8 @@ export default function RegistroJoven() {
     curp: "",
   });
 
+
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type, checked } = e.target as HTMLInputElement;
     let finalValue: any = value;
@@ -134,6 +138,17 @@ export default function RegistroJoven() {
         reader.onload = () => resolve((reader.result as string).split(',')[1]);
         reader.onerror = error => reject(error);
     });
+    // 🆕 NUEVA FUNCIÓN: Formatear fecha de YYYY-MM-DD a DD/MM/YYYY
+    const formatDateToDDMMYYYY = (dateString: string): string => {
+      if (!dateString) return '';
+      
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      
+      return `${day}/${month}/${year}`;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -149,7 +164,11 @@ export default function RegistroJoven() {
 
         try {
             const payload = { ...formData };
-        
+
+            if (formData.fechaNacimiento) {
+              payload.fechaNacimiento = formatDateToDDMMYYYY(formData.fechaNacimiento);
+            }
+            
             // Si hay una foto, la convertimos a Base64
             if (formData.foto) {
                 const fotoBase64 = await toBase64(formData.foto);
@@ -158,7 +177,7 @@ export default function RegistroJoven() {
                 delete payload.foto; // No se envía la propiedad si no hay foto
             }
 
-            const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/registerJoven';
+            const API_ENDPOINT = 'https://registrojoven-819994103285.us-central1.run.app';
 
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',

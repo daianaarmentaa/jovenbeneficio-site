@@ -26,7 +26,7 @@ export default function CategoriaSelector({
     const fetchCategorias = async () => {
       try {
         const response = await fetch(
-          'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/categorias'
+          'https://listar-categorias-819994103285.us-central1.run.app'
         );
         
         if (!response.ok) {
