@@ -8,8 +8,8 @@ import Pagination from "../Pagination";
 import NegociosCardView from "../tablaNegocios/NegociosCardView";
 import NegociosDesktopTable from "./NegociosDesktopTable";
 
-const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/establecimientos";
-const DELETE_API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/deleteEstablecimiento";
+const API_URL = "https://lista-establecimiento-819994103285.us-central1.run.app";
+const DELETE_API_URL = "https://eliminar-establecimiento-819994103285.us-central1.run.app";
 
 type PaginationInfo = {
   page: number;

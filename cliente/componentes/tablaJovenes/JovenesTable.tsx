@@ -14,8 +14,8 @@ import Pagination from "../Pagination";
 import JovenesCardView from "./JovenesCardView";
 import JovenesDesktopTable from "./JovenesDesktopTable";
 
-const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenes";
-const DELETE_API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/jovenesDelete";
+const API_URL = "https://listar-joven-819994103285.us-central1.run.app";
+const DELETE_API_URL = "https://eliminar-joven-819994103285.us-central1.run.app";
 
 type PaginationInfo = {
   page: number;

@@ -3,13 +3,13 @@ import PromocionesTable from "@/componentes/PromocionesTable";
 // Updated type to match API response
 export type Promocion = {
   id: number;
-  titulo_promocion: string;
-  nombre_establecimiento: string;
+  titulo: string;
   fecha_creacion: string;
   fecha_expiracion: string;
   estado: 'activa' | 'expirada' | 'cancelada';
   foto: string;
   id_establecimiento: number;
+  nombre_establecimiento: string;
 };
 
 // API Response type
@@ -31,7 +31,7 @@ const S3_BUCKET_URL = "https://beneficiojoven-photos.s3.us-east-1.amazonaws.com"
 // Function to fetch promociones from API
 async function getPromocionesData(): Promise<Promocion[]> {
   try {
-    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/promociones?orderBy=id&orderDir=ASC";
+    const API_URL = "https://listar-promociones-819994103285.us-central1.run.app";
     
     const res = await fetch(API_URL, {
       cache: 'no-store',

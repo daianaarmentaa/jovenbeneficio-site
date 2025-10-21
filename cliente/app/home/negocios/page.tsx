@@ -29,7 +29,7 @@ type ApiResponse = {
 // Función para obtener los datos del API real
 async function getNegociosData() {
   try {
-    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/establecimientos?page=1&limit=5&orderBy=id&orderDir=ASC&view_mode=admin";
+    const API_URL = "https://lista-establecimiento-819994103285.us-central1.run.app/establecimientos?view_mode=admin";
     
     const res = await fetch(API_URL, {
       cache: 'no-store',

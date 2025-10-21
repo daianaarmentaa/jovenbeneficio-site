@@ -30,6 +30,7 @@ type EstablecimientoFormData = {
     colonia: string;
     codigoPostal: string;
     municipio: string;
+    estado: string;
   };
   logo: File | null;
 };
@@ -54,6 +55,7 @@ export default function RegistrarNegocio() {
       colonia: "",
       codigoPostal: "",
       municipio: "",
+      estado: ""
     },
     logo: null,
   });
@@ -116,7 +118,7 @@ const [formError, setFormError] = useState<string | null>(null);
       }
     }
     
-    const addressFields = ["calle", "numeroExt", "numeroInt", "colonia", "codigoPostal", "municipio"];
+    const addressFields = ["calle", "numeroExt", "numeroInt", "colonia", "codigoPostal", "municipio", "estado"];
     if (addressFields.includes(name)) {
       setFormData((prev) => ({
         ...prev,
@@ -207,12 +209,13 @@ const [formError, setFormError] = useState<string | null>(null);
           municipio: formData.direccion.municipio,
           numeroExterior: formData.direccion.numeroExt,
           numeroInterior: formData.direccion.numeroInt || undefined,
+          estado: formData.direccion.estado
         },
         correoPublico: formData.correoPublico || formData.correoContacto,
         telefonoPublico: formData.telefonoPublico || undefined,
       };
 
-      const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/registroRestaurante';
+      const API_ENDPOINT = 'https://registro-establecimiento-819994103285.us-central1.run.app ';
 
       console.log('Sending payload:', payload);
 
@@ -545,6 +548,19 @@ const [formError, setFormError] = useState<string | null>(null);
               type="text" 
               name="municipio" 
               value={formData.direccion.municipio}
+              onChange={handleChange} 
+              required 
+              className="input input-bordered w-full !rounded" 
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="label text-base-content">
+              <span className="label-text">Estado</span>
+            </label>
+            <input 
+              type="text" 
+              name="estado" 
+              value={formData.direccion.estado}
               onChange={handleChange} 
               required 
               className="input input-bordered w-full !rounded" 

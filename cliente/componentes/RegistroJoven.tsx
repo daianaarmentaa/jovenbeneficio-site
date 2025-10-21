@@ -31,6 +31,8 @@ type JovenFormData = {
   foto?: File | null; 
 };
 
+
+
 export default function RegistroJoven() {
   const [formData, setFormData] = useState<JovenFormData>({
     nombre: "",
@@ -61,46 +63,11 @@ export default function RegistroJoven() {
     celular: "",
     password:"",
     curp: "",
-    codigoPostal:"",
-    nombre:"",
-    apellidoPaterno:"",
-    apellidoMaterno:"",
   });
 
-  const checkPasswordStrength = (password: string) => {
-  let score = 0;
-  
-  if (password.length >= 8) score++;
-  if (password.length >= 12) score++;
-  if (/[A-Z]/.test(password)) score++; // Mayúsculas
-  if (/[a-z]/.test(password)) score++; // Minúsculas
-  if (/[0-9]/.test(password)) score++; // Números
-  if (/[!@#$%^&*]/.test(password)) score++; // Caracteres especiales
 
-  if (password.length === 0) return { message: '', level: 'none' };
-  if (password.length < 8) return { message: 'Debe tener al menos 8 caracteres.', level: 'invalid' };
   
-  switch (score) {
-    case 0:
-    case 1:
-    case 2:
-      return { message: 'Contraseña muy débil', level: 'weak' };
-    case 3:
-      return { message: 'Contraseña débil', level: 'weak' };
-    case 4:
-      return { message: 'Contraseña media', level: 'medium' };
-    case 5:
-      return { message: 'Contraseña fuerte', level: 'strong' };
-    case 6:
-      return { message: 'Contraseña muy fuerte', level: 'strong' };
-    default:
-      return { message: '', level: 'none' };
-  }
-};
-const [passwordStrength, setPasswordStrength] = useState('none');
-const [passwordFeedback, setPasswordFeedback] = useState("");
-
-const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type, checked } = e.target as HTMLInputElement;
     let finalValue: any = value;
 
@@ -208,6 +175,17 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
         reader.onload = () => resolve((reader.result as string).split(',')[1]);
         reader.onerror = error => reject(error);
     });
+    // 🆕 NUEVA FUNCIÓN: Formatear fecha de YYYY-MM-DD a DD/MM/YYYY
+    const formatDateToDDMMYYYY = (dateString: string): string => {
+      if (!dateString) return '';
+      
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      
+      return `${day}/${month}/${year}`;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -237,7 +215,11 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 
         try {
             const payload = { ...formData };
-        
+
+            if (formData.fechaNacimiento) {
+              payload.fechaNacimiento = formatDateToDDMMYYYY(formData.fechaNacimiento);
+            }
+            
             // Si hay una foto, la convertimos a Base64
             if (formData.foto) {
                 const fotoBase64 = await toBase64(formData.foto);
@@ -246,7 +228,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
                 delete payload.foto; // No se envía la propiedad si no hay foto
             }
 
-            const API_ENDPOINT = 'https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/registerJoven';
+            const API_ENDPOINT = 'https://registrojoven-819994103285.us-central1.run.app';
 
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
