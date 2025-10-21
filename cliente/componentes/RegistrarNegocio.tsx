@@ -105,7 +105,7 @@ const [passwordStrength, setPasswordStrength] = useState('none');
 const [isLoading, setIsLoading] = useState(false);
 const [formError, setFormError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     if (e.target.type === 'file') {
@@ -553,18 +553,20 @@ const [formError, setFormError] = useState<string | null>(null);
               className="input input-bordered w-full !rounded" 
             />
           </div>
-          <div className="sm:col-span-2">
-            <label className="label text-base-content">
-              <span className="label-text">Estado</span>
-            </label>
-            <input 
-              type="text" 
-              name="estado" 
-              value={formData.direccion.estado}
+            <div>
+            <label className="label text-base-content"><span className="label-text">Estado</span></label>
+            <select 
+              name="direccion.estado" 
+              value={formData.direccion.estado} 
               onChange={handleChange} 
               required 
-              className="input input-bordered w-full !rounded" 
-            />
+              className="select select-bordered w-full !rounded px-2" >        
+              <option disabled value="">Selecciona un estado</option>
+              <option value="Estado de México">Estado de México</option>
+              <option value="CDMX">Ciudad de México</option>
+              <option value="Otro">Otro</option>
+            </select>
+
           </div>
         </div>
       </div>

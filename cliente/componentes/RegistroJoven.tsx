@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { User } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 type JovenFormData = {
   nombre: string;
@@ -63,8 +64,44 @@ export default function RegistroJoven() {
     celular: "",
     password:"",
     curp: "",
+    codigoPostal: "",
+    nombre:"",
+    apellidoPaterno:"",
+    apellidoMaterno:""
   });
 
+  const checkPasswordStrength = (password: string) => {
+  let score = 0;
+
+  if (password.length >= 8) score++;
+  if (password.length >= 12) score++;
+  if (/[A-Z]/.test(password)) score++; // Mayúsculas
+  if (/[a-z]/.test(password)) score++; // Minúsculas
+  if (/[0-9]/.test(password)) score++; // Números
+  if (/[!@#$%^&*]/.test(password)) score++; // Caracteres especiales
+
+  if (password.length === 0) return { message: '', level: 'none' };
+  if (password.length < 8) return { message: 'Debe tener al menos 8 caracteres.', level: 'invalid' };
+
+  switch (score) {
+    case 0:
+    case 1:
+    case 2:
+      return { message: 'Contraseña muy débil', level: 'weak' };
+    case 3:
+      return { message: 'Contraseña débil', level: 'weak' };
+    case 4:
+      return { message: 'Contraseña media', level: 'medium' };
+    case 5:
+      return { message: 'Contraseña fuerte', level: 'strong' };
+    case 6:
+      return { message: 'Contraseña muy fuerte', level: 'strong' };
+    default:
+      return { message: '', level: 'none' };
+  }
+};
+  const [passwordStrength, setPasswordStrength] = useState('none');
+  const [ passwordFeedback, setPasswordFeedback] = useState("");
 
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -175,7 +212,7 @@ export default function RegistroJoven() {
         reader.onload = () => resolve((reader.result as string).split(',')[1]);
         reader.onerror = error => reject(error);
     });
-    // 🆕 NUEVA FUNCIÓN: Formatear fecha de YYYY-MM-DD a DD/MM/YYYY
+    // NUEVA FUNCIÓN: Formatear fecha de YYYY-MM-DD a DD/MM/YYYY
     const formatDateToDDMMYYYY = (dateString: string): string => {
       if (!dateString) return '';
       
@@ -187,6 +224,7 @@ export default function RegistroJoven() {
       return `${day}/${month}/${year}`;
     };
 
+    const router = useRouter();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormError(null); // Limpia errores previos
@@ -246,6 +284,7 @@ export default function RegistroJoven() {
             }
 
             alert('¡Joven registrado con éxito!');
+            router.push('/home/jovenes');
 
 
         } catch (error: any) {
