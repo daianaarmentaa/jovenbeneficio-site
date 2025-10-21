@@ -1,3 +1,8 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar una gráfica de barras en donde se ven los 5 negocios más visitados
+ * La función recibe el nombre del usuario para mostrarlo en el encabezado.
+ * Autora: Daiana Andrea Armenta Maya
+*/
 "use client";
 import React from "react";
 import { BarChart3 } from "lucide-react";
@@ -5,6 +10,7 @@ import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Ba
 
 type NegocioVisitas = { name: string; visitas: number};
 
+// Se definen los colores que se van a usar en cada barra 
 const barColors = ["#71D1FE", "#FFB667", "#7AF1A7", "#FF9FA0", "#E9D4FF", "#FCA4D4"];
 
 export default function NegociosMasVisitados({ data }: { data: NegocioVisitas[]}) {

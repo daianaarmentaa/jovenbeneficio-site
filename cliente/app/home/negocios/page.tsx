@@ -2,15 +2,15 @@ import NegociosTable from "@/componentes/tablaNegocios/NegociosTable";
 
 // Updated type to match API response
 export type Negocio = {
-  id: number;
-  nombre_establecimiento: string;
-  nombre_contacto_completo: string;
+  id_establecimiento: number;
+  nombre: string;
   foto: string;
   colonia: string;
-  correo: string;
-  telefono: string;
-  categoria: string;
-  fecha_registro: string;
+  id_categoria: number;
+  nombre_categoria: string;
+  nombre_contacto_completo: string;
+  correos: string;  
+  telefonos: string; 
 };
 
 // API Response type
@@ -29,7 +29,7 @@ type ApiResponse = {
 // Función para obtener los datos del API real
 async function getNegociosData() {
   try {
-    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/establecimientos?page=1&limit=5&orderBy=id&orderDir=ASC";
+    const API_URL = "https://9somwbyil5.execute-api.us-east-1.amazonaws.com/prod/establecimientos?page=1&limit=5&orderBy=id&orderDir=ASC&view_mode=admin";
     
     const res = await fetch(API_URL, {
       cache: 'no-store',
@@ -55,8 +55,6 @@ async function getNegociosData() {
     
     const apiResponse: ApiResponse = await res.json();
     
-    // ✅ Lambda now returns complete presigned URLs, so NO transformation needed
-    // Just use the data as-is
     return {
       data: apiResponse.data,
       pagination: apiResponse.pagination,

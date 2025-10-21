@@ -1,7 +1,8 @@
-// ============================================
-// componentes/JovenesCardView.tsx
-// ============================================
-
+/* Esta función se encarga de crear un componente para
+ * mostrar la tabla de los jóvenes registrados en forma de tarjetas para
+ * pantallas pequeñas
+ * Autora: Daiana Andrea Armenta Maya
+*/
 import { Trash2 } from 'lucide-react';
 import { Joven } from "../../app/home/jovenes/page"; // ✅ Import from page
 

@@ -5,13 +5,10 @@ import Image from 'next/image';
 export default function HomePage() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
-      {/* Fondo Opcional: Gradiente o Imagen */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-90"></div>
-      
-      {/* Tarjeta de Contenido */}
+    
       <div className="relative w-full max-w-md p-8 space-y-8 bg-base-100 rounded-lg shadow-2xl text-center">
         
-        {/* 1. Logo como Protagonista */}
         <div className="flex justify-center">
           <Image 
             src="/logo.png"
@@ -24,7 +21,6 @@ export default function HomePage() {
 
         </div>
         
-        {/* 2. Jerarquía de Texto */}
         <div>
           <h1 className="text-3xl font-bold text-base-content">
             Portal de Administradores

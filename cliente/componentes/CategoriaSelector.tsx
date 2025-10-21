@@ -85,7 +85,7 @@ export default function CategoriaSelector({
         <span className="label-text">Categoría del negocio</span>
       </label>
       <select 
-        className="select select-bordered w-full !rounded"
+        className="select select-bordered w-full !rounded px-2"
         value={value}
         onChange={handleChange}
         required={required}

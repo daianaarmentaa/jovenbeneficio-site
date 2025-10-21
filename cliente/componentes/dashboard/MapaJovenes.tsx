@@ -1,64 +1,70 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
-import "leaflet.heat";
-import { useTheme } from "@/app/providers/theme_providers"; // 1. Importa tu hook de tema
+import { useTheme } from "@/app/providers/theme_providers";
 
-const datosSimulados = [
-  { lat: 19.556, lng: -99.250, cantidad: 15 },
-  { lat: 19.560, lng: -99.245, cantidad: 8 },
-  { lat: 19.548, lng: -99.260, cantidad: 20 },
-  { lat: 19.565, lng: -99.255, cantidad: 5 },
-];
+// Importa los estilos necesarios
+import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
-function HeatmapLayer({ puntos }: { puntos: typeof datosSimulados }) {
-  const map = useMap();
-  const layerRef = useRef<any>(null);
-  const { theme } = useTheme(); // Detecta el tema actual
+// Tipo de dato para las coordenadas individuales que usará el mapa
+type CoordenadaPoint = { lat: number; lng: number; };
+
+// Tipo de dato que esperamos de la API (con cantidad)
+type ApiPoint = { lat: string; lng: string; cantidad: number };
+
+// Creamos un ícono simple (un pequeño círculo) para reemplazar el pin azul.
+const customMarkerIcon = new L.DivIcon({
+  html: `<span class="bg-blue-500 w-2 h-2 block rounded-full border border-white"></span>`,
+  className: '', // Necesario para que los estilos se apliquen
+  iconSize: [8, 8],
+  iconAnchor: [4, 4],
+});
+
+
+export default function MapaJovenesClusters() {
+  const { theme } = useTheme();
+  const [puntos, setPuntos] = useState<CoordenadaPoint[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!map) return;
-    const heatData = puntos.map(p => [p.lat, p.lng, p.cantidad]);
+    const API_ENDPOINT_URL = 'https://aqajhyyeq6.execute-api.us-east-1.amazonaws.com/default/getCoordenadas';
 
-    // 2. Define un gradiente de color más brillante para el modo oscuro
-    const heatGradient = {
-      0.4: 'blue',
-      0.6: 'cyan',
-      0.7: 'lime',
-      0.8: 'yellow',
-      1.0: 'red'
-    };
-    
-    // Si la capa existe, la borramos para crearla de nuevo
-    if (layerRef.current) {
-        map.removeLayer(layerRef.current);
-    }
-    
-    layerRef.current = (L as any).heatLayer(heatData, { 
-      radius: 25,
-      // Aplica el gradiente brillante solo si el tema es oscuro
-      gradient: theme === 'dracula' ? heatGradient : undefined
-    }).addTo(map);
+    fetch(API_ENDPOINT_URL)
+      .then(response => response.json())
+      .then((data: ApiPoint[]) => {
+        if (Array.isArray(data)) {
+          // --- ✅ CAMBIO PRINCIPAL: Transformar los datos agrupados en puntos individuales ---
+          const puntosIndividuales: CoordenadaPoint[] = [];
+          data.forEach(grupo => {
+            // Por cada grupo, creamos la cantidad de puntos que indica "cantidad"
+            for (let i = 0; i < grupo.cantidad; i++) {
+              puntosIndividuales.push({
+                lat: parseFloat(grupo.lat), // Convertimos el string a número
+                lng: parseFloat(grupo.lng), // Convertimos el string a número
+              });
+            }
+          });
+          setPuntos(puntosIndividuales);
+        } else {
+          console.error("Error: Los datos recibidos no son un arreglo.", data);
+          setPuntos([]);
+        }
+      })
+      .catch(error => {
+        console.error("Error al obtener las coordenadas:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
-  }, [map, puntos, theme]); // Se vuelve a ejecutar si el tema cambia
-
-  return null;
-}
-
-export default function MapaJovenesHeatmap() {
-  const { theme } = useTheme(); // 3. Obtiene el tema actual
-
-  // 4. Define las URLs para los temas claro y oscuro
   const tileLayers = {
-    light: {
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      attribution: "&copy; OpenStreetMap contributors"
-    },
-    dark: {
-      url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-    }
+    light: { url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", attribution: "&copy; OpenStreetMap contributors" },
+    dark: { url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution: '&copy; OpenStreetMap contributors &copy; CARTO' }
   };
 
   const currentTileLayer = theme === 'dracula' ? tileLayers.dark : tileLayers.light;
@@ -66,21 +72,42 @@ export default function MapaJovenesHeatmap() {
   return (
     <div className="card lg:col-span-4 bg-base-100 shadow-lg">
       <div className="card-body items-center text-center">
-        <h2 className="card-title text-base-content">Ubicación de los Jóvenes</h2>
+        <h2 className="card-title text-base-content">Concentración de Jóvenes</h2>
+        
+        {isLoading ? (
+          <div style={{ height: "400px", width: "100%" }} className="flex items-center justify-center">
+            <span className="loading loading-spinner text-primary"></span>
+          </div>
+        ) : (
+          <MapContainer
+            center={[19.554, -99.252]}
+            zoom={12}
+            style={{ height: "400px", width: "100%", borderRadius: '1rem' }}
+          >
+            <TileLayer
+              url={currentTileLayer.url}
+              attribution={currentTileLayer.attribution}
+            />
+            
+            <MarkerClusterGroup>
+              {Array.isArray(puntos) && puntos.map((punto, index) => (
+                <Marker 
+                  key={index} 
+                  position={[punto.lat, punto.lng]}
+                  icon={customMarkerIcon}
+                >
+                  <Popup>
+                    Ubicación de un joven. <br /> 
+                    Lat: {punto.lat.toFixed(4)}, Lng: {punto.lng.toFixed(4)}
+                  </Popup>
+                </Marker>
+              ))}
+            </MarkerClusterGroup>
 
-        <MapContainer
-          center={[19.554, -99.252]}
-          zoom={12}
-          style={{ height: "400px", width: "100%", borderRadius: '1rem' }}
-        >
-          {/* 5. Usa la URL y atribución que corresponde al tema actual */}
-          <TileLayer
-            url={currentTileLayer.url}
-            attribution={currentTileLayer.attribution}
-          />
-          <HeatmapLayer puntos={datosSimulados} />
-        </MapContainer>
+          </MapContainer>
+        )}
       </div>
     </div>
   );
 }
+

@@ -1,3 +1,9 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar el dashboard general de la página
+ * Se hace fetch de la api y se mandan los datos correspondientes a cada componente del dashboard
+ * La función recibe el nombre del usuario para mostrarlo en el encabezado.
+ * Autora: Daiana Andrea Armenta Maya
+*/
 "use client";
 import React, { useEffect, useState } from "react";
 
@@ -8,7 +14,7 @@ import GeneroUsuarios from "./GeneroUsuarios";
 import NegociosFavoritos from "./NegociosFavs";
 import UltimasPromociones from "./UltimasPromos";
 import UsoTarjetaDigital from "./UsoTarjetaD";
-import MapaJovenes from "./MapaClient";
+import MapaDinamico from "./MapaClient";
 
 
 export default function DashboardGeneral({ user }: { user: any }) {
@@ -48,7 +54,7 @@ export default function DashboardGeneral({ user }: { user: any }) {
         <NegociosFavoritos data={datos.topFavoritos} />
         <UltimasPromociones data={datos.promociones} />
         <UsoTarjetaDigital data={datos.usoTarjeta} />
-        <MapaJovenes />
+        <MapaDinamico />
       </div>
     </main>
   );

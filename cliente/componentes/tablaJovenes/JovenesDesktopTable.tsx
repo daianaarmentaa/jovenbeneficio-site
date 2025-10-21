@@ -1,7 +1,7 @@
-// ============================================
-// componentes/JovenesDesktopTable.tsx
-// ============================================
-
+/* Esta función se encarga de crear un componente para
+ * mostrar la tabla de los jóvenes registrados para pantallas grandes
+ * Autora: Daiana Andrea Armenta Maya
+*/
 import { Trash2 } from 'lucide-react';
 import { Joven } from "../../app/home/jovenes/page"; // ✅ Import from page
 

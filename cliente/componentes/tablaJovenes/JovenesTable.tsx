@@ -1,3 +1,9 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar la tabla de los jóvenes registrados.
+ * La función recibe los datos enviados por la api.
+ * Autora: Daiana Andrea Armenta Maya
+*/
+
 'use client';
 
 import { useState, useEffect, useRef } from "react";
@@ -82,23 +88,24 @@ export default function JovenesTable({ initialData, initialPagination }: Props) 
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      console.log('📊 Initial render with', initialData.length, 'jóvenes');
+      console.log('Initial render with', initialData.length, 'jóvenes');
       return;
     }
+    
+    console.log('Fetching page:', currentPage);
     fetchJovenes(currentPage, search);
   }, [currentPage]);
-
+  
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log(`Debounced search for: "${search}"`);
-      setCurrentPage(1); 
-      fetchJovenes(1, search);
-    }, 500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [search]);
+    console.log(`Debounced search for: "${search}"`);
+    setCurrentPage(1); 
+    fetchJovenes(1, search);
+  }, 500);
+  return () => {
+    clearTimeout(timer);
+  };
+}, [search]);
 
 
 const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,9 +116,8 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!jovenToDelete) return;
     
     try {
-      console.log(`🗑️ Deleting joven with ID: ${jovenToDelete.id}`);
+      console.log(`Deleting joven with ID: ${jovenToDelete.id}`);
       
-      // ✅ USE THE CORRECT DELETE ENDPOINT
       const response = await fetch(
         `${DELETE_API_URL}/${jovenToDelete.id}`, 
         { 
@@ -128,7 +134,7 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       }
       
       const result = await response.json();
-      console.log('✅ Delete successful:', result);
+      console.log('Delete successful:', result);
       
       // Calculate if we need to go to previous page
       // If we're deleting the last item on the current page and we're not on page 1
@@ -137,18 +143,18 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       
       if (shouldGoToPreviousPage) {
         // Go to previous page
-        console.log('📄 Going to previous page after delete');
+        console.log('Going to previous page after delete');
         setCurrentPage(currentPage - 1);
         await fetchJovenes(currentPage - 1, search);
       } else {
         // Refresh the current page
-        console.log('🔄 Refreshing current page after delete');
+        console.log('Refreshing current page after delete');
         await fetchJovenes(currentPage, search);
       }
       
       alert(`Joven "${jovenToDelete.nombre}" eliminado con éxito.`);
     } catch (error) {
-      console.error('❌ Delete error:', error);
+      console.error('Delete error:', error);
       alert(error instanceof Error ? error.message : "No se pudo eliminar el registro.");
     } finally {
       setJovenToDelete(null);

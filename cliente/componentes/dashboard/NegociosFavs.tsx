@@ -1,3 +1,9 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar el dashboard general de la página
+ * Se hace fetch de la api y se mandan los datos correspondientes a cada componente del dashboard
+ * La función recibe los datos enviados por la API.
+ * Autora: Daiana Andrea Armenta Maya
+*/
 "use client";
 import React from "react";
 import { Heart } from "lucide-react";
@@ -5,6 +11,7 @@ import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Ba
 
 type NegocioFavoritos = { name: string; favoritos: number };
 
+// Se definen los colores que se van a usar en cada barra 
 const barColors = ["#71D1FE", "#FFB667", "#7AF1A7", "#FF9FA0", "#E9D4FF", "#FCA4D4"];
 
 export default function NegociosFavoritos({ data }: { data: NegocioFavoritos[] }) {
@@ -26,7 +33,7 @@ export default function NegociosFavoritos({ data }: { data: NegocioFavoritos[] }
           <BarChart data={data} layout="vertical" margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
-            <YAxis dataKey="name" type="category" width={70} interval={0} stroke="rgba(156, 156, 156, 1)" />
+            <YAxis dataKey="name" type="category" width={100} interval={0} stroke="rgba(156, 156, 156, 1)" />
             <Tooltip cursor={{ fill: "rgba(0,0,0,0.1)" }} />
             <Bar dataKey="favoritos">
               {data.map((_, i) => (

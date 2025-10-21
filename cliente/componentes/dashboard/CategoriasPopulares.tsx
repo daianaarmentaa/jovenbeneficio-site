@@ -1,3 +1,7 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar una gráfica de barras con las categorías más populares
+ * Autora: Daiana Andrea Armenta Maya
+*/
 "use client";
 import React from "react";
 import { Activity } from "lucide-react";

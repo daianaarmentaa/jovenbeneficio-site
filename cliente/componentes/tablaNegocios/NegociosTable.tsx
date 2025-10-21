@@ -42,7 +42,8 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
         page: page.toString(),
         limit: pageSize.toString(),
         orderBy: 'id',
-        orderDir: 'ASC'
+        orderDir: 'ASC',
+        view_mode: 'admin'
       });
 
       if (searchQuery) {
@@ -82,14 +83,13 @@ export default function NegociosTable({ initialData, initialPagination }: Props)
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      console.log('📊 Initial render with', initialData.length, 'negocios');
+      console.log('Initial render with', initialData.length, 'negocios');
       return;
     }
     
-    console.log('🔄 Fetching page:', currentPage);
+    console.log('Fetching page:', currentPage);
     fetchNegocios(currentPage, search);
   }, [currentPage]);
-
     useEffect(() => {
     const timer = setTimeout(() => {
       console.log(`Debounced search for: "${search}"`);
@@ -111,10 +111,10 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!negocioToDelete) return;
     
     try {
-      console.log(`🗑️ Deleting negocio with ID: ${negocioToDelete.id}`);
+      console.log(`Deleting negocio with ID: ${negocioToDelete.id_establecimiento}`);
       
       const response = await fetch(
-        `${DELETE_API_URL}/${negocioToDelete.id}`, 
+        `${DELETE_API_URL}/${negocioToDelete.id_establecimiento}`, 
         { 
           method: 'DELETE',
           headers: {
@@ -129,24 +129,24 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       }
       
       const result = await response.json();
-      console.log('✅ Delete successful:', result);
+      console.log('Delete successful:', result);
       
       // Calculate if we need to go to previous page
       const isLastItemOnPage = negocios.length === 1;
       const shouldGoToPreviousPage = isLastItemOnPage && currentPage > 1;
       
       if (shouldGoToPreviousPage) {
-        console.log('📄 Going to previous page after delete');
+        console.log('Going to previous page after delete');
         setCurrentPage(currentPage - 1);
         await fetchNegocios(currentPage - 1, search);
       } else {
-        console.log('🔄 Refreshing current page after delete');
+        console.log('Refreshing current page after delete');
         await fetchNegocios(currentPage, search);
       }
       
-      alert(`Establecimiento "${negocioToDelete.nombre_establecimiento}" eliminado con éxito.`);
+      alert(`Establecimiento "${negocioToDelete.nombre}" eliminado con éxito.`);
     } catch (error) {
-      console.error('❌ Delete error:', error);
+      console.error('Delete error:', error);
       alert(error instanceof Error ? error.message : "No se pudo eliminar el establecimiento.");
     } finally {
       setNegocioToDelete(null);
@@ -218,7 +218,7 @@ const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       
       <DeleteConfirmationModal
         isOpen={!!negocioToDelete}
-        itemName={negocioToDelete?.nombre_establecimiento || ''}
+        itemName={negocioToDelete?.nombre || ''}
         onClose={() => setNegocioToDelete(null)}
         onConfirm={handleDelete}
       />

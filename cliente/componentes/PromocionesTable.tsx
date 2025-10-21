@@ -1,3 +1,7 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar un tabla con las promociones creadas por los negocios
+ * Autora: Daiana Andrea Armenta Maya y Emiliano Plata
+*/
 'use client';
 
 import { useState, useEffect } from "react";
@@ -36,7 +40,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
   const filtered = promociones.filter((p) => {
     const searchTerm = search.toLowerCase();
     const matchesSearch = 
-      p.nombre_promocion.toLowerCase().includes(searchTerm) ||
+      p.titulo_promocion.toLowerCase().includes(searchTerm) ||
       p.nombre_establecimiento.toLowerCase().includes(searchTerm);
     
     const matchesEstado = estadoFilter === "" || p.estado === estadoFilter;
@@ -134,7 +138,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
             {paginated.map((promo) => (
               <tr key={promo.id} className="bg-base-100 hover:bg-base-300">
                 <td>{promo.id}</td>
-                <td className="font-semibold">{promo.nombre_promocion}</td>
+                <td className="font-semibold">{promo.titulo_promocion}</td>
                 <td>{promo.nombre_establecimiento}</td>
                 <td>{formatDate(promo.fecha_creacion)}</td>
                 <td>{formatDate(promo.fecha_expiracion)}</td>
@@ -154,7 +158,7 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
         {paginated.map((promo) => (
           <div key={promo.id} className="card bg-base-100 shadow-lg p-4">
             <div className="flex justify-between items-center mb-4">
-              <div className=" text-base-content font-bold text-lg">{promo.nombre_promocion}</div>
+              <div className=" text-base-content font-bold text-lg">{promo.titulo_promocion}</div>
               <span className={`badge ${estadoColors[promo.estado]}`}>
                 {promo.estado}
               </span>

@@ -1,3 +1,7 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar un formulario para el registro de los negocios
+ * Autora: Daiana Andrea Armenta Maya y Emiliano Plata
+*/
 "use client"
 
 import { useState } from "react";
@@ -61,9 +65,43 @@ export default function RegistrarNegocio() {
     password: "",
     telefonoContacto: "",
     telefonoPublico: "",
+    codigoPostal:"",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
+
+  const checkPasswordStrength = (password: string) => {
+  let score = 0;
+  
+  if (password.length >= 8) score++;
+  if (password.length >= 12) score++;
+  if (/[A-Z]/.test(password)) score++; // Mayúsculas
+  if (/[a-z]/.test(password)) score++; // Minúsculas
+  if (/[0-9]/.test(password)) score++; // Números
+  if (/[!@#$%^&*]/.test(password)) score++; // Caracteres especiales
+
+  if (password.length === 0) return { message: '', level: 'none' };
+  if (password.length < 8) return { message: 'Debe tener al menos 8 caracteres.', level: 'invalid' };
+  
+  switch (score) {
+    case 0:
+    case 1:
+    case 2:
+      return { message: 'Contraseña muy débil', level: 'weak' };
+    case 3:
+      return { message: 'Contraseña débil', level: 'weak' };
+    case 4:
+      return { message: 'Contraseña media', level: 'medium' };
+    case 5:
+      return { message: 'Contraseña fuerte', level: 'strong' };
+    case 6:
+      return { message: 'Contraseña muy fuerte', level: 'strong' };
+    default:
+      return { message: '', level: 'none' };
+  }
+};
+const [passwordStrength, setPasswordStrength] = useState('none');
+
+const [isLoading, setIsLoading] = useState(false);
+const [formError, setFormError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -96,12 +134,12 @@ export default function RegistrarNegocio() {
         [name]: emailRegex.test(value) ? "" : "Correo inválido" 
       }));
     }
-    
     if (name === "password") {
-      const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+      const strength = checkPasswordStrength(value);
+      setPasswordStrength(strength.level); // Actualiza el nivel para la barra visual
       setErrors((prev) => ({ 
         ...prev, 
-        password: passRegex.test(value) ? "" : "Mínimo 8 caracteres, una letra, un número y un caracter especial" 
+        password: strength.message 
       }));
     }
 
@@ -110,6 +148,15 @@ export default function RegistrarNegocio() {
       setErrors((prev) => ({ 
         ...prev, 
         [name]: phoneRegex.test(value) ? "" : "Número de teléfono inválido (10 dígitos)" 
+      }));
+    }
+    if (name === "direccion.codigoPostal") {
+      const cpRegex = /^(?!(\d)\1{4})\d{5}$/;
+      setErrors((prev) => ({
+        ...prev,
+        codigoPostal: (cpRegex.test(value) || value.length === 0)
+        ? ""
+        : "Ingresa un formato válido para un código postal.",
       }));
     }
   };
@@ -125,15 +172,10 @@ export default function RegistrarNegocio() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
-
+    
     // Validaciones
     if (!formData.categoria) {
       setFormError("Por favor, selecciona una categoría para el negocio.");
-      return;
-    }
-
-    if (Object.values(errors).some(error => error !== "")) {
-      setFormError("Por favor, corrige los errores en el formulario.");
       return;
     }
 
@@ -245,7 +287,8 @@ export default function RegistrarNegocio() {
               name="adminId" 
               value={formData.adminId}
               onChange={handleChange} 
-              required 
+              required
+              min="0"
               className="input input-bordered w-full !rounded"
               placeholder="Ej: 1"
             />
@@ -355,10 +398,26 @@ export default function RegistrarNegocio() {
               value={formData.password}
               onChange={handleChange} 
               required 
-              className={`input input-bordered w-full !rounded ${errors.password ? 'input-error' : ''}`}
+              className={`input input-bordered w-full !rounded ${errors.password && passwordStrength === 'invalid' ? "input-error" : "" }`}
               placeholder="Mínimo 8 caracteres"
             />
-            {errors.password && <span className="text-error text-xs mt-1">{errors.password}</span>}
+                        {passwordStrength !== 'none' && (
+              <div className="mt-2">
+                <span className={`text-xs ${
+                  passwordStrength === 'invalid' || passwordStrength === 'weak' ? 'text-error' :
+                  passwordStrength === 'medium' ? 'text-warning' : 'text-success'
+                }`}>
+                  {errors.password}
+                </span>
+                <div className="w-full bg-base-300 rounded-full h-2 mt-1">
+                  <div className={`h-2 rounded-full ${
+                    passwordStrength === 'weak' || passwordStrength === 'invalid' ? 'w-1/3 bg-error' :
+                    passwordStrength === 'medium' ? 'w-2/3 bg-warning' :
+                    passwordStrength === 'strong' ? 'w-full bg-success' : 'w-0'
+                }`}></div>
+                </div>
+            </div>
+          )}
           </div>
         </div>
       </div>
@@ -456,12 +515,12 @@ export default function RegistrarNegocio() {
             </label>
             <input 
               type="text" 
-              name="codigoPostal" 
-              value={formData.direccion.codigoPostal}
+              name="direccion.codigoPostal" 
               onChange={handleChange} 
-              required 
-              className="input input-bordered w-full !rounded" 
-            />
+              required
+              maxLength={5} 
+              className={`input input-bordered w-full !rounded ${errors.codigoPostal ? 'input-error' : ''}`} />
+              {errors.codigoPostal && <span className="text-error text-xs mt-1">{errors.codigoPostal}</span>}
           </div>
 
           <div className="sm:col-span-2 lg:col-span-3">

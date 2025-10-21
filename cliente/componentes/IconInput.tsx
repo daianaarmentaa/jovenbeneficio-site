@@ -1,3 +1,7 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar un cuadro para escribir texto.
+ * Autora: Daiana Andrea Armenta Maya y Emiliano Plata
+*/
 import React from 'react';
 
 type IconInputProps = React.InputHTMLAttributes<HTMLInputElement> & {

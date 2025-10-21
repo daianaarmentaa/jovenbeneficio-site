@@ -1,7 +1,13 @@
+/* Esta función se encarga de crear un componente para
+ * mostrar las estadísticas principales en el dashboard
+ * La función recibe los datos enviados por la API.
+ * Autora: Daiana Andrea Armenta Maya
+*/
 "use client";
 import React from "react";
 import { Users, CakeSlice, Store, CreditCard } from "lucide-react";
 
+// Se crea una interfaz para recopilar los datos que se envian desde la api 
 interface Stats {
   total_jovenes: number;
   promedio_edad: number;
