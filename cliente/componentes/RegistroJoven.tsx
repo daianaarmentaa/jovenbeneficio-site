@@ -28,13 +28,12 @@ type JovenFormData = {
   celular: string;
   password: string;
   consentimientoAceptado: boolean;
-  foto?: File | null; // <-- LA CLAVE ES EL '?'
+  foto?: File | null; 
 };
 
 
 
 export default function RegistroJoven() {
-  // --- PASO 2: APLICA EL TIPO A TU ESTADO ---
   const [formData, setFormData] = useState<JovenFormData>({
     nombre: "",
     apellidoPaterno: "",
@@ -113,15 +112,53 @@ export default function RegistroJoven() {
       setErrors((prev) => ({ ...prev, celular: phoneRegex.test(value) ? "" : "Número de celular inválido" }));
     }
     if (name === "password") {
-      const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-      setErrors((prev) => ({ ...prev, password: passRegex.test(value) ? "" : "Mínimo 8 caracteres, una letra y un número" }));
+      const strength = checkPasswordStrength(value);
+      
+      // Guarda el nivel para la barra de color
+      setPasswordStrength(strength.level);
+      
+      // Guarda el mensaje ("fuerte", "débil", etc.) en el nuevo estado para mostrarlo al usuario
+      setPasswordFeedback(strength.message); 
+
+      // Decide si es un error real (solo si es inválida o débil)
+      const isError = strength.level === 'invalid' || strength.level === 'weak';
+      
+      setErrors((prev) => ({ 
+        ...prev, 
+        // Si NO es un error, guarda "" en el objeto de errores.
+        // Si SÍ es un error, guarda el mensaje de error.
+        password: isError ? strength.message : "" 
+      }));
     }
     if (name === "curp") {
+      const curpRegex = /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/;
+      const upperCaseValue = value.toUpperCase();
+      setFormData(prev => ({ ...prev, curp: upperCaseValue }));
       setErrors((prev) => ({
         ...prev,
-        curp: finalValue.length !== 18 && finalValue.length > 0
-          ? "El CURP debe tener 18 caracteres."
-          : "",
+        curp: curpRegex.test(upperCaseValue) || upperCaseValue.length === 0
+        ? ""
+        : "El formato del CURP no es válido.",
+      }));
+    }
+    if (name === "direccion.codigoPostal") {
+      const cpRegex = /^(?!(\d)\1{4})\d{5}$/;
+
+      setErrors((prev) => ({
+        ...prev,
+        codigoPostal: (cpRegex.test(value) || value.length === 0)
+        ? ""
+        : "Ingresa un formato válido para un código postal.",
+      }));
+    }
+    const nameFields = ["nombre", "apellidoPaterno", "apellidoMaterno"];
+    if (nameFields.includes(name)) {
+      const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+      const isValid = nameRegex.test(value) || value.length === 0;
+
+      setErrors((prev) => ({
+        ...prev,
+        [name]: isValid ? "" : "Este campo solo puede contener letras y espacios.",
       }));
     }
 
@@ -154,10 +191,24 @@ export default function RegistroJoven() {
         e.preventDefault();
         setFormError(null); // Limpia errores previos
 
+        console.log('Estado de Errores al Enviar:', errors);
+        
+        const hasClientErrors = Object.values(errors).some(errorMsg => errorMsg !== "");
+
+        if (hasClientErrors) {
+            setFormError("Por favor, corrige los errores marcados en el formulario.");
+            return; // Detiene el envío si hay cualquier error de formato
+        }
+          
         // Validación extra en el frontend
         if (!formData.consentimientoAceptado) {
             setFormError("Debes aceptar el aviso de privacidad para registrarte.");
             return;
+        }
+
+        if (passwordStrength !== 'strong') {
+          setFormError("La contraseña debe ser completamente segura antes de continuar.");
+          return;
         }
 
         setIsLoading(true);
@@ -225,15 +276,18 @@ export default function RegistroJoven() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label className="label text-base-content"><span className="label-text">Nombre(s)</span></label>
-            <input type="text" name="nombre" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+            <input type="text" name="nombre" onChange={handleChange} required className={`input input-bordered w-full !rounded ${errors.nombre ? 'input-error' : ''}`} />
+            {errors.nombre && <span className="text-error text-xs mt-1">{errors.nombre}</span>}
           </div>
           <div>
             <label className="label text-base-content"><span className="label-text">Apellido Paterno</span></label>
-            <input type="text" name="apellidoPaterno" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+            <input type="text" name="apellidoPaterno" onChange={handleChange} required className={`input input-bordered w-full !rounded ${errors.apellidoPaterno ? 'input-error' : ''}`} />
+            {errors.apellidoPaterno && <span className="text-error text-xs mt-1">{errors.apellidoPaterno}</span>}
           </div>
           <div>
             <label className="label text-base-content"><span className="label-text">Apellido Materno</span></label>
-            <input type="text" name="apellidoMaterno" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+            <input type="text" name="apellidoMaterno" onChange={handleChange} required className={`input input-bordered w-full !rounded ${errors.apellidoMaterno ? 'input-error' : ''}`}/>
+            {errors.apellidoMaterno && <span className="text-error text-xs mt-1">{errors.apellidoMaterno}</span>}
           </div>
           <div>
             <label className="label text-base-content"><span className="label-text">Fecha de nacimiento</span></label>
@@ -252,7 +306,7 @@ export default function RegistroJoven() {
           </div>
           <div>
             <label className="label text-base-content"><span className="label-text">Género</span></label>
-              <select name="genero" onChange={handleChange} value={formData.genero} required className="select select-bordered w-full !rounded">
+              <select name="genero" onChange={handleChange} value={formData.genero} required className="select select-bordered w-full !rounded px-2">
                 <option disabled value="">Selecciona una opción</option>
                 <option value="M">Masculino</option>
                 <option value="F">Femenino</option>
@@ -264,7 +318,6 @@ export default function RegistroJoven() {
       
       <div className="divider"></div>
 
-      {/* --- SECCIÓN 2: DIRECCIÓN --- */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-base-content">Dirección</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -282,7 +335,8 @@ export default function RegistroJoven() {
           </div>
           <div>
             <label className="label text-base-content"><span className="label-text">Código Postal</span></label>
-            <input type="text" name="direccion.codigoPostal" onChange={handleChange} required className="input input-bordered w-full !rounded" />
+            <input type="text" name="direccion.codigoPostal" value={formData.direccion.codigoPostal} onChange={handleChange} required maxLength={5} className={`input input-bordered w-full !rounded ${errors.codigoPostal ? 'input-error' : ''}`} />
+            {errors.codigoPostal && <span className="text-error text-xs mt-1">{errors.codigoPostal}</span>}
           </div>
           <div className="sm:col-span-2 lg:col-span-3">
             <label className="label text-base-content"><span className="label-text">Colonia</span></label>
@@ -294,21 +348,24 @@ export default function RegistroJoven() {
           </div>
           <div>
             <label className="label text-base-content"><span className="label-text">Estado</span></label>
-            <input 
-              type="text" 
+            <select 
               name="direccion.estado" 
               value={formData.direccion.estado} 
               onChange={handleChange} 
               required 
-              className="input input-bordered w-full !rounded" 
-            />
+              className="select select-bordered w-full !rounded px-2" >        
+              <option disabled value="">Selecciona un estado</option>
+              <option value="Estado de México">Estado de México</option>
+              <option value="CDMX">Ciudad de México</option>
+              <option value="Otro">Otro</option>
+            </select>
+
           </div>
         </div>
       </div>
 
       <div className="divider"></div>
 
-      {/* --- SECCIÓN 3: DATOS DE LA CUENTA --- */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-base-content">Datos de la Cuenta</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -325,14 +382,35 @@ export default function RegistroJoven() {
         </div>
         <div>
           <label className="label text-base-content"><span className="label-text">Contraseña</span></label>
-          <input type="password" name="password" onChange={handleChange} required className={`input input-bordered w-full !rounded ${errors.password ? "input-error" : "" }`} />
-          {errors.password && <span className="text-error text-xs mt-1">{errors.password}</span>}
-        </div>
+            <input 
+              type="password" 
+              name="password" 
+              onChange={handleChange} 
+              required 
+              className={`input input-bordered w-full !rounded ${errors.password && passwordStrength === 'invalid' ? "input-error" : "" }`} 
+            />
+            {passwordStrength !== 'none' && (
+              <div className="mt-2">
+                <span className={`text-xs ${
+                  passwordStrength === 'invalid' || passwordStrength === 'weak' ? 'text-error' :
+                  passwordStrength === 'medium' ? 'text-warning' : 'text-success'
+                }`}>
+                  {passwordFeedback}
+                </span>
+                <div className="w-full bg-base-300 rounded-full h-2 mt-1">
+                  <div className={`h-2 rounded-full ${
+                    passwordStrength === 'weak' || passwordStrength === 'invalid' ? 'w-1/3 bg-error' :
+                    passwordStrength === 'medium' ? 'w-2/3 bg-warning' :
+                    passwordStrength === 'strong' ? 'w-full bg-success' : 'w-0'
+                }`}></div>
+                </div>
+            </div>
+          )}
       </div>
+    </div>
 
       <div className="divider"></div>
 
-      {/* --- SECCIÓN 4: FOTO DE PERFIL --- */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-base-content">Foto de Perfil</h2>
         <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -349,7 +427,6 @@ export default function RegistroJoven() {
 
       <div className="divider"></div>
 
-      {/* --- SECCIÓN 4: CONSENTIMIENTO --- */}
       <div className="space-y-2">
         <div className="flex items-start">
           <div className="flex items-center h-5">
@@ -375,8 +452,6 @@ export default function RegistroJoven() {
         </div>
       </div>
 
-        {/* --- SECCIÓN 5: BOTONES DE ACCIÓN --- */}
-        {/* Muestra un mensaje de error si existe */}
         {formError && (
           <div className="text-center text-error p-2 bg-error/20 rounded-md mb-4">
             {formError}

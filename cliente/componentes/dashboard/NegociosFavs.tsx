@@ -33,7 +33,7 @@ export default function NegociosFavoritos({ data }: { data: NegocioFavoritos[] }
           <BarChart data={data} layout="vertical" margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" />
-            <YAxis dataKey="name" type="category" width={70} interval={0} stroke="rgba(156, 156, 156, 1)" />
+            <YAxis dataKey="name" type="category" width={100} interval={0} stroke="rgba(156, 156, 156, 1)" />
             <Tooltip cursor={{ fill: "rgba(0,0,0,0.1)" }} />
             <Bar dataKey="favoritos">
               {data.map((_, i) => (
