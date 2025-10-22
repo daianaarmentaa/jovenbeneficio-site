@@ -23,6 +23,8 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
     "/home/ajustes": "Ajustes",
     "/home/jovenes/registrarJoven": "Jóvenes",
     "/home/negocios/registrarNegocio": "Negocios",
+    "/home/admins": "Administradores",
+    "/home/admins/registrarAdmin": "Registro"
   };
 
   const title = titleMap[pathname] || "Dashboard";

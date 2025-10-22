@@ -4,10 +4,11 @@
 */
 'use client';
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, Briefcase, Gift, Settings } from "lucide-react";
+import { useUser } from "@auth0/nextjs-auth0";
+import { Home, Users, Briefcase, Gift, Settings, Shield } from "lucide-react";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -16,12 +17,27 @@ type SidebarProps = {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
+  const { user } = useUser();
+  const [rol, setRol] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.email) {
+      fetch(`https://y3y75wja2d.execute-api.us-east-1.amazonaws.com/default/getRole?correo=${user.email}`)
+        .then(res => res.json())
+        .then(data => setRol(data.rol))
+        .catch(() => setRol(null));
+    }
+  }, [user]);
 
   const menuItems = [
     { href: "/home", label: "Home", icon: Home },
     { href: "/home/jovenes", label: "Jóvenes", icon: Users },
     { href: "/home/negocios", label: "Negocios", icon: Briefcase },
     { href: "/home/promociones", label: "Promociones", icon: Gift },
+    // Este ítem solo se muestra si el usuario es super_admin
+    ...(rol === "super_admin"
+      ? [{ href: "/home/admins", label: "Administradores", icon: Shield }]
+      : []),
     { href: "/home/ajustes", label: "Ajustes", icon: Settings, mtAuto: true },
   ];
 
@@ -48,7 +64,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             <span className="font-light text-lg text-blue-200">JOVEN</span>
           </div>
         </div>
-        
+
         <ul className="menu bg-transparent text-base-content text-sm flex-col gap-2 flex-grow px-4 mt-4">
           {menuItems.map(({ href, label, icon: Icon, mtAuto }) => (
             <li key={href} className={mtAuto ? "mt-auto" : ""}>
