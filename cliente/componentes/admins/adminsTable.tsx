@@ -8,7 +8,7 @@ import AdminsCardView from "./AdminsCardView";
 import AdminsDesktopTable from "./adminsDeskTopTable";
 
 const API_URL = "https://5ouqlbfg7h.execute-api.us-east-1.amazonaws.com/default/getAdmins";
-const DELETE_API_URL = "https://eliminar-admin.example.com";
+const DELETE_API_URL = "https://jzgk6lxhti.execute-api.us-east-1.amazonaws.com/default/deleteAdmin";
 
 type Admin = {
   id_admin: number;
@@ -36,6 +36,7 @@ export default function AdminsTable({ initialData, initialPagination }: Props) {
   const [totalPages, setTotalPages] = useState(initialPagination.total_pages);
   const [totalItems, setTotalItems] = useState(initialPagination.total);
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [adminToDelete, setAdminToDelete] = useState<Admin | null>(null);
   const isFirstRender = useRef(true);
   const pageSize = 5;
@@ -91,10 +92,16 @@ export default function AdminsTable({ initialData, initialPagination }: Props) {
 
   const handleDelete = async () => {
     if (!adminToDelete) return;
+    setDeleteLoading(true);
     try {
-      const response = await fetch(`${DELETE_API_URL}/${adminToDelete.id_admin}`, {
+      const response = await fetch(DELETE_API_URL, {  // URL sin /{id}
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id_admin: adminToDelete.id_admin  // Enviamos el ID en el body
+        })
       });
 
       if (!response.ok) throw new Error("Error al eliminar el administrador.");
@@ -113,7 +120,8 @@ export default function AdminsTable({ initialData, initialPagination }: Props) {
     } catch (error) {
       alert(error instanceof Error ? error.message : "No se pudo eliminar.");
     } finally {
-      setAdminToDelete(null);
+        setDeleteLoading(false);
+        setAdminToDelete(null);
     }
   };
 
@@ -162,6 +170,7 @@ export default function AdminsTable({ initialData, initialPagination }: Props) {
         itemName={adminToDelete?.nombre || ''}
         onClose={() => setAdminToDelete(null)}
         onConfirm={handleDelete}
+
       />
     </div>
   );
