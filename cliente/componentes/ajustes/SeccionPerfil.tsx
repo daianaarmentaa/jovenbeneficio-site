@@ -1,50 +1,110 @@
 "use client";
-import { useState, ChangeEvent, FormEvent } from 'react'; // Importar hooks necesarios
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import SectionHeader from "./SectionHeader";
 
+interface AdminProfile {
+  id_admin: number;
+  nombre: string;
+  correo: string;
+  rol: string;
+  foto: string | null;
+  apellido_paterno?: string;
+  apellido_materno?: string;
+}
+
 export default function SeccionPerfil({ user }: { user: any }) {
+  const [adminProfile, setAdminProfile] = useState<AdminProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [name, setName] = useState(user?.name || '');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Obtener el perfil del administrador desde tu BD
+  useEffect(() => {
+    const fetchAdminProfile = async () => {
+      if (!user?.email) {
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        const response = await fetch('https://5ouqlbfg7h.execute-api.us-east-1.amazonaws.com/default/getAdmins');
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Buscar el admin que coincide con el email del usuario logueado
+          const currentAdmin = data.data.find((admin: AdminProfile) => 
+            admin.correo === user.email
+          );
+          
+          setAdminProfile(currentAdmin || null);
+          
+          // Establecer la imagen de preview con la foto de la BD
+          if (currentAdmin?.foto) {
+            setImagePreview(currentAdmin.foto);
+          } else if (user.picture) {
+            setImagePreview(user.picture); // Fallback a Auth0
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching admin profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdminProfile();
+  }, [user]);
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUpdateProfile = async (e: FormEvent) => {
+    e.preventDefault();
+
+    console.log("Actualizando perfil...");
+    console.log("Admin ID:", adminProfile?.id_admin);
+
+    if (selectedImage) {
+      console.log("Imagen seleccionada:", selectedImage.name);
+      // Aquí irá la lógica para subir la imagen
+    }
+
+    alert("Funcionalidad de guardado en desarrollo. Revisa la consola para ver los datos.");
+  };
+
+  // Función para determinar qué imagen mostrar
+  const getDisplayImage = () => {
+    if (imagePreview) return imagePreview;
+    if (adminProfile?.foto) return adminProfile.foto;
+    if (user?.picture) return user.picture;
+    return "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
+  };
 
   if (!user) {
     return null;
   }
 
-  // Paso 1: Crear estados para manejar los datos del formulario
-  const [name, setName] = useState(user.nickname || '');
-  const [lastName, setLastName] = useState(user.given_name || '');
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(user.picture || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp");
-
-  // Paso 2: Crear una función para manejar el cambio de la imagen
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedImage(file); // Guardar el archivo para subirlo después
-      setImagePreview(URL.createObjectURL(file)); // Crear una URL temporal para la previsualización
-    }
-  };
-
-  // Paso 3: Crear una función para manejar el envío del formulario
-  const handleUpdateProfile = async (e: FormEvent) => {
-    e.preventDefault(); // Evitar que la página se recargue
-
-    // Lógica para subir la imagen y actualizar el perfil
-    console.log("Actualizando perfil...");
-    console.log("Nombre:", name);
-    console.log("Apellidos:", lastName);
-
-    if (selectedImage) {
-      console.log("Imagen seleccionada:", selectedImage.name);
-      // AQUÍ IRÁ LA LÓGICA PARA SUBIR LA IMAGEN AL BACKEND (ver explicación abajo)
-      // 1. Pedir una URL segura para subir el archivo a tu backend (Lambda).
-      // 2. Subir el archivo `selectedImage` a esa URL (generalmente a un bucket de S3).
-      // 3. Una vez subida, obtienes la URL pública de la imagen.
-      // 4. Envías la nueva URL de la imagen y los otros datos (nombre, apellido) a otro endpoint de tu API para guardarlos en la base de datos.
-    } else {
-       // Si no se cambió la imagen, solo envía los otros datos
-       // AQUÍ IRÁ LA LÓGICA PARA ACTUALIZAR SOLO LOS DATOS DE TEXTO
-    }
-     alert("Funcionalidad de guardado en desarrollo. Revisa la consola para ver los datos.");
-  };
+  if (loading) {
+    return (
+      <div className="card p-6 sm:p-8">
+        <SectionHeader
+          title="Perfil de Usuario"
+          subtitle="Actualiza tu foto e información personal."
+        />
+        <div className="space-y-6 mt-6">
+          <div className="skeleton h-24 w-full"></div>
+          <div className="skeleton h-12 w-full"></div>
+          <div className="skeleton h-12 w-full"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="card p-6 sm:p-8">
@@ -52,44 +112,87 @@ export default function SeccionPerfil({ user }: { user: any }) {
         title="Perfil de Usuario"
         subtitle="Actualiza tu foto e información personal."
       />
-      {/* Paso 3: Asociar la función de envío al formulario */}
       <form className="space-y-6 mt-6" onSubmit={handleUpdateProfile}>
         <div className="flex flex-col sm:flex-row items-center gap-6">
           <div className="avatar">
             <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              {/* Paso 4: Mostrar la imagen previsualizada o la del usuario */}
-              <img src={imagePreview || ''} alt="Vista previa del perfil" />
+              <img 
+                src={getDisplayImage()} 
+                alt="Foto de perfil" 
+                className="w-24 h-24 rounded-full object-cover"
+                onError={(e) => {
+                  // Fallback si la imagen no carga
+                  e.currentTarget.src = "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
+                }}
+              />
             </div>
           </div>
           <div className="w-full sm:flex-1">
-            {/* Paso 2: Asociar la función de cambio al input de archivo */}
             <input 
               type="file" 
               className="file-input file-input-bordered w-full text-base-content" 
               onChange={handleImageChange}
-              accept="image/png, image/jpeg, image/gif" // Limitar tipos de archivo
+              accept="image/png, image/jpeg, image/gif"
             />
             <p className="text-xs text-base-content/70 mt-2">JPG, GIF o PNG. Tamaño máximo de 5MB.</p>
+            
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="label"><span className="label-text text-base-content">Nombre</span></label>
-            {/* Paso 1: Vincular el input al estado */}
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input input-bordered w-full rounded text-base-content" />
-          </div>
-          <div>
-            <label className="label"><span className="label-text text-base-content">Apellidos</span></label>
-            {/* Paso 1: Vincular el input al estado */}
-            <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className=" text-base-content input input-bordered w-full !rounded" />
+            <label className="label">
+              <span className="label-text text-base-content">Nombre Completo</span>
+            </label>
+            <input 
+              type="text" 
+              value={name} 
+              className="input input-bordered w-full rounded text-base-content" 
+              disabled 
+            />
           </div>
         </div>
+
         <div>
-          <label className="label"><span className="label-text text-base-content">Correo Electrónico</span></label>
-          <input type="email" value={user.email} className="input input-bordered w-full" disabled />
+          <label className="label">
+            <span className="label-text text-base-content">Correo Electrónico</span>
+          </label>
+          <input 
+            type="email" 
+            value={user.email} 
+            className="input input-bordered w-full" 
+            disabled 
+          />
         </div>
+
+        <div>
+          <label className="label">
+            <span className="label-text text-base-content">Rol</span>
+          </label>
+          <input 
+            type="text" 
+            value={adminProfile?.rol || 'No asignado'} 
+            className="input input-bordered w-full" 
+            disabled 
+          />
+        </div>
+
+        <div>
+          <label className="label">
+            <span className="label-text text-base-content">ID de Administrador</span>
+          </label>
+          <input 
+            type="text" 
+            value={adminProfile?.id_admin || 'No encontrado'} 
+            className="input input-bordered w-full" 
+            disabled 
+          />
+        </div>
+
         <div className="flex justify-end pt-4">
-          <button type="submit" className="btn btn-primary rounded">Guardar Cambios</button>
+          <button type="submit" className="btn btn-primary rounded">
+            Guardar Cambios
+          </button>
         </div>
       </form>
     </div>

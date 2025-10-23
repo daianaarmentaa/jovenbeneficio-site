@@ -9,7 +9,7 @@ export default function DeleteConfirmationModal({ isOpen, itemName, onClose, onC
   if (!isOpen) return null;
 
   return (
-    <dialog id="delete_modal" className="modal modal-open">
+    <dialog id="delete_modal" className=" text-base-content modal modal-open">
       <div className="modal-box">
         <h3 className="font-bold text-lg">Confirmar Eliminación</h3>
         <p className="py-4">
