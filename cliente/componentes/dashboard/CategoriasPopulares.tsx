@@ -14,9 +14,9 @@ const barColors = ["#71D1FE", "#FFB667", "#7AF1A7", "#FF9FA0", "#E9D4FF", "#FCA4
 export default function CategoriasPopulares({ data }: { data: Categoria[] }) {
   if (!data || data.length === 0) {
   return (
-    <div className="card bg-base-100 shadow-lg">
+    <div className="card bg-base-100 shadow-lg tex-base-content">
       <div className="card-body">
-        <h2 className="card-title"><Activity className="text-neutral" /> Categorias Populares</h2>
+        <h2 className="card-title text-base-content"><Activity className="text-base-content" /> Categorias Populares</h2>
         <p className="text-center text-gray-500">No hay datos disponibles</p>
       </div>
     </div>

@@ -130,10 +130,10 @@ const [formError, setFormError] = useState<string | null>(null);
 
     // Validación en tiempo real
     if (name === "correoContacto" || name === "correoPublico") {
-      const emailRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-      setErrors((prev) => ({ 
-        ...prev, 
-        [name]: emailRegex.test(value) ? "" : "Correo inválido" 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setErrors((prev) => ({
+        ...prev,
+        [name]: emailRegex.test(value) ? "" : "Correo inválido"
       }));
     }
     if (name === "password") {
@@ -556,7 +556,7 @@ const [formError, setFormError] = useState<string | null>(null);
             <div>
             <label className="label text-base-content"><span className="label-text">Estado</span></label>
             <select 
-              name="direccion.estado" 
+              name="estado" 
               value={formData.direccion.estado} 
               onChange={handleChange} 
               required 
