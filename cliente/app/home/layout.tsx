@@ -4,26 +4,32 @@ import { useState } from 'react';
 import Sidebar from "@/componentes/Sidebar";
 import NavBar from "@/componentes/NavBar";
 
+/**
+ * DashboardLayout es un layout principal para el panel de administración.
+ * 
+ * Este componente envuelve la interfaz de usuario con un `Sidebar` y un `NavBar`,
+ * y renderiza el contenido principal dentro del área de `main`. 
+ * Proporciona la funcionalidad de abrir/cerrar la barra lateral (sidebar).
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {React.ReactNode} props.children - Contenido que se renderizará dentro del layout.
+ * @author Daiana Armenta
+ */
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  // El estado para la visibilidad del sidebar vive aquí
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Función para abrir/cerrar el sidebar
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Se le pasa el estado y la función para que se muestre/oculte */}
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Se le pasa la función para que el botón de hamburguesa funcione */}
         <NavBar toggleSidebar={toggleSidebar} />
         
-        {/* El contenido principal de la página */}
         <main className="flex-1 p-6 bg-base-200 overflow-y-auto">
           {children}
         </main>

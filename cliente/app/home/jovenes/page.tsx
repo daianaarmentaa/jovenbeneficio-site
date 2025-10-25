@@ -1,5 +1,14 @@
 import JovenesTable from "@/componentes/tablaJovenes/JovenesTable";
 
+/**
+ * Función que obtiene los datos de los jóvenes desde la API.
+ * @async
+ * @function getJovenesData
+ * @returns {Promise<{data: Joven[], pagination: ApiResponse['pagination']}>} 
+ *          Datos de jóvenes y paginación.
+ * @author Daiana Armenta y Emiliano Plata
+ */
+
 //Los datos que se van a mostrar del joven
 export type Joven = {
   id: number;

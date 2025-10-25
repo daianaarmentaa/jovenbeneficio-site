@@ -1,6 +1,21 @@
 import SectionHeader from "./SectionHeader";
 import PasswordInput from "../ContraseñaInput";
 
+/**
+ * Componente: SeccionSeguridad
+ * 
+ * Descripción:
+ * Este componente permite a los usuarios gestionar la seguridad de su cuenta.
+ * Funcionalidades incluidas:
+ * - Actualización de contraseña mediante campos de contraseña actual, nueva y confirmación.
+ * - Uso del componente PasswordInput para una mejor experiencia de ingreso de contraseña.
+ * - Presentación visual clara con secciones y encabezado mediante SectionHeader.
+ * - Botón para enviar los cambios de contraseña (funcionalidad de backend no incluida en este componente).
+ * 
+ * Autora: Daiana Armenta
+ */
+
+
 export default function SeccionSeguridad() {
   return (
     <div className="card p-6 sm:p-8">

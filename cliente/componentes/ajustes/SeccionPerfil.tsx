@@ -2,6 +2,22 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import SectionHeader from "./SectionHeader";
 
+/**
+ * Componente: SeccionPerfil
+ * 
+ * Descripción:
+ * Este componente muestra y permite actualizar el perfil de un administrador.
+ * Funcionalidades incluidas:
+ * - Visualización de datos del administrador: nombre, correo, rol y ID.
+ * - Vista previa de la foto de perfil y opción de subir una nueva imagen.
+ * - Obtención de la información del administrador desde la base de datos y fallback a datos del usuario logueado.
+ * - Indicadores de carga mientras se obtiene la información.
+ * - Manejo de errores al cargar la imagen y fallback a imagen predeterminada.
+ * - Formulario preparado para actualizar los datos (funcionalidad de guardado en desarrollo).
+ * 
+ * Autora: Daiana Armenta
+ */
+
 interface AdminProfile {
   id_admin: number;
   nombre: string;

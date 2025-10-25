@@ -1,10 +1,30 @@
-// use client'; // Comentado si no es necesario en tu setup actual
-
 import { useState } from 'react';
 import { KeyRound, Eye, EyeOff } from 'lucide-react';
-import clsx from 'clsx'; // Opcional pero recomendado para unir clases
+import clsx from 'clsx';
 
-// Este componente ahora acepta un `className` para el contenedor
+/**
+ * Componente: PasswordInput
+ * 
+ * Descripción:
+ * Este componente renderiza un campo de entrada de contraseña con la opción de
+ * mostrar u ocultar el contenido mediante un botón. Está diseñado para integrarse
+ * fácilmente en formularios y manejar atributos estándar de un input HTML.
+ * 
+ * Funcionalidades:
+ * - Muestra un ícono de llave al inicio del input.
+ * - Permite alternar entre mostrar y ocultar la contraseña.
+ * - Admite clases adicionales en el contenedor mediante `containerClassName`.
+ * - Se integra con las props normales de un input (placeholder, required, etc.).
+ * 
+ * Props:
+ * - containerClassName: string opcional para agregar clases al contenedor.
+ * - ...props: cualquier atributo válido de un input HTML (type, placeholder, value, etc.).
+ * 
+ * Autora: Daiana Armenta
+ */
+
+
+
 type PasswordInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   containerClassName?: string;
 };

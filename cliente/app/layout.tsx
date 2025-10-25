@@ -2,9 +2,22 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import 'leaflet/dist/leaflet.css';
 import "./globals.css";
-
-// 👇 1. Importa el ThemeProvider que creamos
 import { ThemeProvider } from "./providers/theme_providers";
+/**
+ * Componente RootLayout
+ * ---------------------
+ * Layout raíz de la aplicación Next.js.
+ * Proporciona:
+ *   - Estructura HTML y BODY.
+ *   - Inicialización del tema desde localStorage.
+ *   - Fuente global Poppins.
+ *   - Proveedor de temas ThemeProvider para toda la app.
+ *
+ * @param {Object} props - Props del componente.
+ * @param {React.ReactNode} props.children - Contenido anidado dentro del layout.
+ * @returns {JSX.Element} Componente JSX que envuelve toda la aplicación.
+ * @author Daiana Armenta
+ */
 
 const poppins = Poppins({
   variable: "--font-sans",

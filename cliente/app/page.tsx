@@ -1,6 +1,14 @@
 "use client";
-import Link from 'next/link';
 import Image from 'next/image';
+/**
+ * Página: Bienvenida
+ * --------------------
+ * Página principal de la aplicación para administradores.
+ * Muestra el logo, título, descripción y un botón para iniciar sesión.
+ *
+ * @returns {JSX.Element} Retorna la estructura de la página de inicio.
+ * @author Daiana Armenta
+ */
 
 export default function HomePage() {
   return (
@@ -30,7 +38,6 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* 3. Llamado a la Acción Claro */}
         <a 
           href="/auth/login" 
           className="btn btn-primary btn-block rounded-full"
@@ -39,7 +46,6 @@ export default function HomePage() {
         </a>
       </div>
 
-      {/* 4. Detalles de Confianza en el Pie de Página */}
       <footer className="absolute bottom-4 text-center w-full text-gray-500/60 text-sm z-10">
         <p>&copy; {new Date().getFullYear()} Beneficio Joven. Todos los derechos reservados.</p>
         <p className="font-semibold">Acceso Restringido</p>

@@ -1,5 +1,19 @@
-import { Trash2, UserX } from "lucide-react"; // Usamos UserX para 'desactivar'
+import { Trash2, UserX } from "lucide-react";
 import SectionHeader from "./SectionHeader";
+
+/**
+ * Componente: SeccionCuenta
+ * 
+ * Descripción:
+ * Este componente renderiza la sección de gestión de la cuenta de usuario.
+ * Incluye:
+ * - Opción de desactivar temporalmente la cuenta, ocultando perfil y contenido hasta el próximo inicio de sesión.
+ * - Opción de eliminar la cuenta de forma permanente, con advertencia de pérdida de datos.
+ * - Uso de alertas visuales y botones con estilos diferenciados para cada acción.
+ * - Encabezado de sección con título y subtítulo a través del componente SectionHeader.
+ * 
+ * Autora: Daiana Armenta
+ */
 
 export default function SeccionCuenta() {
   return (
@@ -10,7 +24,6 @@ export default function SeccionCuenta() {
       />
       <div className="space-y-6 mt-6">
         
-        {/* --- NUEVA SECCIÓN: DESACTIVAR CUENTA --- */}
         <div className="alert alert-warning">
           <UserX className="w-5 h-5"/>
           <div>

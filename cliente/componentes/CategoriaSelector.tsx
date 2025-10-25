@@ -2,6 +2,27 @@
 
 import { useState, useEffect } from 'react';
 
+/**
+ * Componente: CategoriaSelector
+ * 
+ * Descripción:
+ * Este componente renderiza un selector de categorías de negocio.
+ * Funcionalidades incluidas:
+ * - Obtiene dinámicamente la lista de categorías desde una API externa.
+ * - Maneja estados de carga y errores mostrando mensajes adecuados.
+ * - Permite seleccionar una categoría y notifica al componente padre mediante la función onChange.
+ * - Soporta validación de campo requerido mediante la propiedad `required`.
+ * - Muestra un placeholder mientras se cargan los datos.
+ * 
+ * Props:
+ * - value: número que representa la categoría seleccionada o vacío.
+ * - onChange: función que recibe el id de la categoría seleccionada.
+ * - required: booleano opcional para marcar el campo como obligatorio.
+ * 
+ * Autora: Daiana Armenta
+ */
+
+
 type Categoria = {
   id_categoria: number;
   nombre: string;

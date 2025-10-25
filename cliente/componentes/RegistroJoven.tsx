@@ -151,19 +151,14 @@ export default function RegistroJoven() {
     if (name === "password") {
       const strength = checkPasswordStrength(value);
       
-      // Guarda el nivel para la barra de color
       setPasswordStrength(strength.level);
-      
-      // Guarda el mensaje ("fuerte", "débil", etc.) en el nuevo estado para mostrarlo al usuario
+
       setPasswordFeedback(strength.message); 
 
-      // Decide si es un error real (solo si es inválida o débil)
       const isError = strength.level === 'invalid' || strength.level === 'weak';
       
       setErrors((prev) => ({ 
         ...prev, 
-        // Si NO es un error, guarda "" en el objeto de errores.
-        // Si SÍ es un error, guarda el mensaje de error.
         password: isError ? strength.message : "" 
       }));
     }
@@ -208,11 +203,10 @@ export default function RegistroJoven() {
     const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        // Quita el prefijo "data:image/jpeg;base64,"
         reader.onload = () => resolve((reader.result as string).split(',')[1]);
         reader.onerror = error => reject(error);
     });
-    // NUEVA FUNCIÓN: Formatear fecha de YYYY-MM-DD a DD/MM/YYYY
+
     const formatDateToDDMMYYYY = (dateString: string): string => {
       if (!dateString) return '';
       
@@ -227,7 +221,7 @@ export default function RegistroJoven() {
     const router = useRouter();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setFormError(null); // Limpia errores previos
+        setFormError(null);
 
         console.log('Estado de Errores al Enviar:', errors);
         
@@ -235,7 +229,7 @@ export default function RegistroJoven() {
 
         if (hasClientErrors) {
             setFormError("Por favor, corrige los errores marcados en el formulario.");
-            return; // Detiene el envío si hay cualquier error de formato
+            return;
         }
           
         // Validación extra en el frontend

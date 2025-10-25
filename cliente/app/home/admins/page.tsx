@@ -1,5 +1,18 @@
 import AdminsTable from "@/componentes/admins/adminsTable";
 
+/**
+ * Obtiene los datos de administradores desde la API.
+ * -----------------------------------------------
+ * Realiza la petición a la API y retorna los datos de administradores
+ * junto con la información de paginación.
+ *
+ * @async
+ * @function getAdminsData
+ * @returns {Promise<{data: Admin[], pagination: ApiResponse['pagination']}>} 
+ *          Objeto con la lista de administradores y la paginación.
+ * @author Daiana Armenta y Emiliano Plata
+ */
+
 // Los datos que se van a mostrar del administrador
 export type Admin = {
   id_admin: number;

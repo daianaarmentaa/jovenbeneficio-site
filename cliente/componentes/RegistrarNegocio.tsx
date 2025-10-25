@@ -13,14 +13,12 @@ type EstablecimientoFormData = {
   nombreNegocio: string;
   adminId: string;
   categoria: number | '';
-  // Contact person info (encrypted)
   nombreContacto: string;
   apellidoPaternoContacto: string;
   apellidoMaternoContacto: string;
   correoContacto: string;
   telefonoContacto: string;
   password: string;
-  // Public info (not encrypted)
   correoPublico: string;
   telefonoPublico: string;
   direccion: {
@@ -236,7 +234,6 @@ const [formError, setFormError] = useState<string | null>(null);
       // Éxito
       alert(`¡Establecimiento "${result.nombre}" registrado con éxito! ID: ${result.id}`);
       
-      // Opcional: Redirigir después de registro exitoso
       window.location.href = '/home/negocios';
       
     } catch (error: any) {

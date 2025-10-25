@@ -2,27 +2,40 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
-// Tipado para el valor del contexto
+/**
+ * ThemeProvider
+ * -------------
+ * Proveedor de contexto que envuelve la aplicación y permite:
+ *   - Mantener el estado del tema actual.
+ *   - Cambiar dinámicamente entre temas.
+ *   - Persistir el tema en localStorage.
+ *
+ * @param {Object} props - Props del componente.
+ * @param {React.ReactNode} props.children - Contenido que recibirá el contexto.
+ * @returns {JSX.Element} Componente ThemeProvider que envuelve a los hijos.
+ * @author Daiana Armenta
+ */
+
 interface ThemeContextType {
   theme: string;
   setTheme: (theme: string) => void;
 }
 
-// 1. Crear el Contexto con un valor por defecto (puede ser undefined)
+
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// 2. Crear el Proveedor del Contexto
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<string>('pastel'); // Estado inicial por defecto
+  const [theme, setTheme] = useState<string>('pastel'); 
 
   useEffect(() => {
-    // Al cargar, intenta leer el tema de localStorage
+
     const savedTheme = localStorage.getItem('theme') || 'pastel';
     setTheme(savedTheme);
   }, []);
 
   useEffect(() => {
-    // Cada vez que el estado 'theme' cambie, actualiza el HTML y localStorage
+
     if (theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
@@ -36,7 +49,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// 3. Crear el hook personalizado para consumir el contexto
+
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {

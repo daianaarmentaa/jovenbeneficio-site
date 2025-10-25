@@ -1,6 +1,20 @@
 import SectionHeader from "./SectionHeader";
 import { useTheme } from "@/app/providers/theme_providers";
 
+/**
+ * Componente: SeccionPreferencias
+ * 
+ * Descripción:
+ * Este componente permite a los usuarios personalizar sus preferencias de la aplicación.
+ * Funcionalidades incluidas:
+ * - Cambio de tema entre claro y oscuro mediante un toggle, usando un proveedor de tema.
+ * - Configuración de notificaciones por correo para promociones y actualizaciones de cuenta.
+ * - Presentación visual clara con secciones y divisores, usando el componente SectionHeader.
+ * 
+ * Autora: Daiana Armenta
+ */
+
+
 export default function SeccionPreferencias() {
   const {theme, setTheme} = useTheme();
 

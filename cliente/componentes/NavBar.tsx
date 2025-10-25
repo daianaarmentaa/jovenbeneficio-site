@@ -42,7 +42,7 @@ export default function NavBar({ toggleSidebar }: NavBarProps) {
 
   const title = titleMap[pathname] || "Dashboard";
 
-  // Obtener el perfil del administrador desde tu API
+  // Obtener el perfil del administrador desde la API
   useEffect(() => {
     const fetchAdminProfile = async () => {
       if (!user?.email) {

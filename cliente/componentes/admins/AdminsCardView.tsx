@@ -1,7 +1,7 @@
 /* Esta función se encarga de crear un componente para
  * mostrar la tabla de los administradores registrados en forma de tarjetas para
  * pantallas pequeñas
- * Autora: Daiana Andrea Armenta Maya
+ * @author Daiana Andrea Armenta Maya
 */
 import { Trash2 } from 'lucide-react';
 

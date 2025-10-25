@@ -26,7 +26,15 @@ type ApiResponse = {
   };
 };
 
-// Función para obtener los datos del API real
+/**
+ * Función para obtener los datos de los negocios desde la API.
+ *
+ * @async
+ * @function getNegociosData
+ * @returns {Promise<{data: Negocio[], pagination: ApiResponse['pagination']}>} 
+ *          Los datos de los negocios y la paginación.
+ * @author Daiana Armenta y Emiliano Plata
+ */
 async function getNegociosData() {
   try {
     const API_URL = "https://lista-establecimiento-819994103285.us-central1.run.app/establecimientos?view_mode=admin";

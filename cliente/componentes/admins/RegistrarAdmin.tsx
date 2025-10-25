@@ -4,6 +4,23 @@ import { useState } from "react";
 import { User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+/**
+ * Componente: RegistroAdmin
+ * 
+ * Descripción:
+ * Este componente renderiza un formulario completo para registrar un nuevo administrador.
+ * Incluye:
+ * - Datos personales: nombre, apellidos.
+ * - Datos de la cuenta: correo, rol, contraseña con validación de fuerza.
+ * - Foto de perfil con vista previa.
+ * - Validaciones en tiempo real para correo, contraseña y campos de texto.
+ * - Conversión de imagen a Base64 antes de enviarla a la API.
+ * - Manejo de estados de carga y errores.
+ * - Redirección al listado de administradores tras el registro exitoso.
+ * 
+ * Autora: Daiana Armenta
+ */
+
 type AdminFormData = {
   nombre: string;
   apellido_paterno: string;

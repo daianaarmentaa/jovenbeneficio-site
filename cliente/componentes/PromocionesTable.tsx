@@ -17,7 +17,6 @@ const estadoColors: { [key: string]: string } = {
   cancelada: 'badge-error',
 };
 
-// --- Opciones para nuestro nuevo Dropdown ---
 const filterOptions = [
   { value: "", label: "Todos los estados" },
   { value: "activa", label: "Activa" },
@@ -36,7 +35,6 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
   const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
   const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
 
-  // Filtering logic
   const filtered = promociones.filter((p) => {
     const searchTerm = search.toLowerCase();
     const matchesSearch = 
@@ -51,17 +49,14 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
   const totalPages = Math.ceil(filtered.length / pageSize);
   const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
   };
   
-  // --- Lógica para el Dropdown ---
   const currentLabel = filterOptions.find(opt => opt.value === estadoFilter)?.label || 'Todos los estados';
 
   const handleFilterChange = (value: string) => {
-    // Tu lógica original, sin cambios
     setEstadoFilter(value);
     setCurrentPage(1);
 
@@ -74,7 +69,6 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
 
   return (
     <div className="p-2">
-      {/* Search and Filter Controls */}
       <div className="mb-4 flex flex-col sm:flex-row gap-2 w-full">
         <input
           type="search"
@@ -114,14 +108,13 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
 
       </div>
 
-      {/* No results message */}
+
       {paginated.length === 0 && (
         <div className="text-center py-8 text-base-content/70">
           No se encontraron promociones
         </div>
       )}
 
-      {/* Desktop Table View */}
       <div className="overflow-x-auto hidden md:block">
         <table className="table w-full border border-base-300 text-base-content">
           <thead className="bg-base-200">
@@ -153,7 +146,6 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
         </table>
       </div>
 
-      {/* Mobile Card View */}
       <div className="md:hidden flex flex-col gap-4">
         {paginated.map((promo) => (
           <div key={promo.id} className="card bg-base-100 shadow-lg p-4">
@@ -185,7 +177,6 @@ export default function PromocionesTable({ initialData }: PromocionesTableProps)
         ))}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center mt-4">
           <button 

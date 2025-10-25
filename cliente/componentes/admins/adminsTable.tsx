@@ -7,6 +7,22 @@ import Pagination from "../Pagination";
 import AdminsCardView from "./AdminsCardView";
 import AdminsDesktopTable from "./adminsDeskTopTable";
 
+/**
+ * Componente: AdminsTable
+ * 
+ * Descripción:
+ * Este componente renderiza una lista de administradores con funcionalidades completas:
+ * - Búsqueda por nombre o correo.
+ * - Paginación de resultados.
+ * - Visualización en tabla para escritorio y en tarjetas para móviles.
+ * - Eliminación de administradores con confirmación mediante modal.
+ * 
+ * Utiliza APIs externas para obtener y eliminar administradores, y maneja
+ * estados de carga y búsqueda con debounce.
+ * 
+ * Autora: Daiana Armenta
+ */
+
 const API_URL = "https://5ouqlbfg7h.execute-api.us-east-1.amazonaws.com/default/getAdmins";
 const DELETE_API_URL = "https://jzgk6lxhti.execute-api.us-east-1.amazonaws.com/default/deleteAdmin";
 

@@ -1,6 +1,6 @@
 /* Esta función se encarga de crear un componente para
  * mostrar la tabla de los administradores registrados para pantallas grandes
- * Autora: Daiana Andrea Armenta Maya
+ * @Author: Daiana Andrea Armenta Maya
 */
 import { Trash2 } from 'lucide-react';
 

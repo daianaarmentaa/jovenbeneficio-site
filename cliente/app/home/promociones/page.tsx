@@ -28,7 +28,15 @@ type ApiResponse = {
 // S3 bucket URL
 const S3_BUCKET_URL = "https://beneficiojoven-photos.s3.us-east-1.amazonaws.com";
 
-// Function to fetch promociones from API
+/**
+ * Obtiene las promociones desde la API y agrega la URL completa
+ * de las imágenes almacenadas en S3.
+ * 
+ * @async
+ * @function getPromocionesData
+ * @returns {Promise<Promocion[]>} Arreglo de promociones con URL de imagen completa
+ * @author Daiana Armenta y Emiliano Plata
+ */
 async function getPromocionesData(): Promise<Promocion[]> {
   try {
     const API_URL = "https://listar-promociones-819994103285.us-central1.run.app";

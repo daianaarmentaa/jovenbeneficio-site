@@ -4,11 +4,26 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import L from "leaflet";
 import { useTheme } from "@/app/providers/theme_providers";
-
-// Importa los estilos necesarios
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+
+/**
+ * Componente: MapaJovenesClusters
+ * 
+ * Descripción:
+ * Este componente muestra un mapa interactivo con clusters de marcadores que representan la concentración de jóvenes.
+ * Funcionalidades incluidas:
+ * - Obtención de coordenadas desde una API y duplicación de puntos según la cantidad reportada.
+ * - Renderizado de mapas con Leaflet y React-Leaflet, usando MarkerClusterGroup para agrupar marcadores.
+ * - Iconos personalizados para los marcadores individuales.
+ * - Adaptación del tile layer según el tema actual (claro u oscuro) usando un proveedor de tema.
+ * - Indicador de carga mientras se obtienen los datos.
+ * - Popups para cada marcador mostrando latitud y longitud.
+ * 
+ * Autora: Daiana Armenta
+ */
+
 
 // Tipo de dato para las coordenadas individuales que usará el mapa
 type CoordenadaPoint = { lat: number; lng: number; };
@@ -16,10 +31,9 @@ type CoordenadaPoint = { lat: number; lng: number; };
 // Tipo de dato que esperamos de la API (con cantidad)
 type ApiPoint = { lat: string; lng: string; cantidad: number };
 
-// Creamos un ícono simple (un pequeño círculo) para reemplazar el pin azul.
 const customMarkerIcon = new L.DivIcon({
   html: `<span class="bg-blue-500 w-2 h-2 block rounded-full border border-white"></span>`,
-  className: '', // Necesario para que los estilos se apliquen
+  className: '', 
   iconSize: [8, 8],
   iconAnchor: [4, 4],
 });
@@ -37,14 +51,12 @@ export default function MapaJovenesClusters() {
       .then(response => response.json())
       .then((data: ApiPoint[]) => {
         if (Array.isArray(data)) {
-          // --- ✅ CAMBIO PRINCIPAL: Transformar los datos agrupados en puntos individuales ---
           const puntosIndividuales: CoordenadaPoint[] = [];
           data.forEach(grupo => {
-            // Por cada grupo, creamos la cantidad de puntos que indica "cantidad"
             for (let i = 0; i < grupo.cantidad; i++) {
               puntosIndividuales.push({
-                lat: parseFloat(grupo.lat), // Convertimos el string a número
-                lng: parseFloat(grupo.lng), // Convertimos el string a número
+                lat: parseFloat(grupo.lat),
+                lng: parseFloat(grupo.lng), 
               });
             }
           });
